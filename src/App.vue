@@ -1,28 +1,35 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app>
+
+    <v-app-bar app flat>
+      Nihilist substitution
+    </v-app-bar>
+
+    <v-main>
+      <v-container>
+        <v-row>
+          <v-col cols="12" sm="6" md="4">
+            <DataForm/>
+          </v-col>
+          <v-col cols="12" sm="6" md="8">
+            <AlgorithmSimulator/>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-main>
+
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
+import DataForm from './components/DataForm';
+import AlgorithmSimulator from './components/AlgorithmSimulator';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld,
+    DataForm,
+    AlgorithmSimulator,
   },
 };
 </script>
-
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
