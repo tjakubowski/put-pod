@@ -32,6 +32,9 @@
 
           <v-col cols="4">
             <base-card title="Secrets" icon="key-outline">
+              <AlphabetTable @input="updateAlphabet"/>
+              <v-divider class="my-3"/>
+              <v-text-field v-model="encryptionKey" label="Key" filled dense/>
             </base-card>
           </v-col>
 
@@ -50,10 +53,12 @@
 
 <script>
 import BaseCard from '@/components/BaseCard';
+import AlphabetTable from "@/components/AlphabetTable";
 
 export default {
   name: 'App',
   components: {
+    AlphabetTable,
     BaseCard,
   },
   data() {
@@ -61,6 +66,8 @@ export default {
       encrypt: true,
       textFile: null,
       text: '',
+      alphabet: [],
+      encryptionKey: '',
     };
   },
   computed: {
@@ -81,6 +88,9 @@ export default {
     reverse() {
       this.text = this.result;
       this.encrypt = !this.encrypt;
+    },
+    updateAlphabet(alphabet) {
+      this.alphabet = alphabet;
     },
     readFile(file) {
       const reader = new FileReader();
