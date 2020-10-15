@@ -75,7 +75,7 @@ export default {
       return '';
     },
     textLabel() {
-      return this.encrypt ? 'Plaintext' : 'Code';
+      return this.encrypt ? 'Plaintext' : 'Encoded text';
     },
   },
   methods: {
