@@ -47,6 +47,10 @@
                   Reverse</v-btn>
               </template>
               <v-textarea :value="result" label="Encrypted text" readonly filled dense/>
+              <encryption-table
+                :encryption-key="encryptionKeyMapped"
+                :text="textMapped"
+              />
             </base-card>
           </v-col>
 
@@ -60,10 +64,12 @@
 <script>
 import BaseCard from '@/components/BaseCard';
 import AlphabetTable from '@/components/AlphabetTable';
+import EncryptionTable from '@/components/EncryptionTable';
 
 export default {
   name: 'App',
   components: {
+    EncryptionTable,
     AlphabetTable,
     BaseCard,
   },
@@ -89,13 +95,32 @@ export default {
   },
   computed: {
     result() {
-      return [...this.text].map((letter, index) => {
+      return [...this.textCleared].map((letter, index) => {
         const encryptionKeyLetter = this.encryptionKey[index % this.encryptionKey.length];
         const encryptionKeyValue = this.getLetterCode(encryptionKeyLetter);
         const letterValue = this.getLetterCode(letter);
 
         return ((encryptionKeyValue + letterValue) % 100).toString().padStart(2, '0');
       });
+    },
+    encryptionKeyMapped() {
+      return [...this.encryptionKey].map((letter) => ({
+        letter,
+        value: this.getLetterCode(letter),
+      }));
+    },
+    textCleared() {
+      return this.text.replace(/\W/g, '');
+    },
+    textMapped() {
+      const size = this.encryptionKey.length;
+
+      const textMapped = [...this.textCleared].map((letter, index) => ({
+        letter,
+        value: this.getLetterCode(letter) + this.getLetterCode(this.encryptionKey[index % this.encryptionKey.length]),
+      }));
+
+      return Array.from({ length: Math.ceil(textMapped.length / size) }, (v, i) => textMapped.slice(i * size, i * size + size));
     },
     textLabel() {
       return this.encrypt ? 'Plaintext' : 'Encoded text';

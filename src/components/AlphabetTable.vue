@@ -81,7 +81,7 @@ export default {
     onInput(event, position) {
       const index = this.getCellIndex(position);
 
-      if (!this.alphabetOccurrences[event.target.value]) {
+      if (!this.alphabetOccurrences[event.target.value] && /\w/.test(event.target.value)) {
         const nextInput = document.querySelector(
           `.alphabet-table__input[data-index='${index + 1}']`,
         );
@@ -109,12 +109,11 @@ export default {
 </script>
 
 <style lang="scss">
-
 .alphabet-table {
-  width: 100%;
   padding: 8px;
 
   table {
+    width: 100%;
     border-collapse: collapse;
   }
 
