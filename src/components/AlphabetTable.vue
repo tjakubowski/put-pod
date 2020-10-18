@@ -37,15 +37,16 @@
         </td>
       </tr>
     </table>
-    <base-error class="px-2" :is-valid="isValid">Alphabet characters are missing</base-error>
+    <base-error class="px-2 mt-1" :is-valid="isValid">Alphabet characters are missing</base-error>
   </div>
 </template>
 
 <script>
-import BaseError from "@/components/BaseError";
+import BaseError from '@/components/BaseError';
+
 export default {
   name: 'AlphabetTable',
-  components: {BaseError},
+  components: { BaseError },
   model: {
     prop: 'alphabet',
   },
@@ -74,14 +75,16 @@ export default {
       }, {});
     },
     isValid() {
-      return Object.keys(this.alphabetOccurrences).length === this.alphabet.length;
+      return this.alphabet.every(l => l.length > 0);
     },
   },
   methods: {
     onInput(event, position) {
       const index = this.getCellIndex(position);
 
-      if (!this.alphabetOccurrences[event.target.value] && /\w/.test(event.target.value)) {
+      if (!this.alphabet.includes(event.target.value)
+        && /\w/.test(event.target.value) || event.target.value.length === 0
+      ) {
         const nextInput = document.querySelector(
           `.alphabet-table__input[data-index='${index + 1}']`,
         );
@@ -95,10 +98,13 @@ export default {
       return (y - 1) * this.alphabetMatrixSize + x - 1;
     },
     cellClasses(position) {
-      const cell = this.alphabet[this.getCellIndex(position)];
+      const cellIndex = this.getCellIndex(position);
+      const cell = this.alphabet[cellIndex];
+      const tempArray = [...this.alphabet];
+      tempArray.splice(cellIndex, 1);
       return {
         'alphabet-table__input': true,
-        'alphabet-table__input--error': cell.length === 0 || this.alphabetOccurrences[cell] > 1,
+        'alphabet-table__input--error': cell.length === 0 || tempArray.includes(cell),
       };
     },
     emitValue() {

@@ -34,7 +34,7 @@
               </template>
 
               <AlphabetTable v-model="alphabet" @increase="alphabetMatrixSize++" @decrease="alphabetMatrixSize--"/>
-              <v-divider class="my-3"/>
+              <v-divider class="mb-3"/>
               <v-text-field v-model="encryptionKey" :rules="encryptionKeyRules" label="Key" filled dense/>
             </base-card>
           </v-col>
@@ -48,6 +48,7 @@
               </template>
               <v-textarea :value="result" label="Encrypted text" readonly filled dense/>
               <encryption-table
+                v-show="isFormValid"
                 :encryption-key="encryptionKeyMapped"
                 :text="textMapped"
               />
@@ -94,7 +95,15 @@ export default {
     },
   },
   computed: {
+    isFormValid() {
+      return this.textCleared.length > 0
+        && this.encryptionKey.length > 0
+        && [...this.encryptionKey].every((encryptionLetter) => this.alphabet.includes(encryptionLetter))
+        && this.alphabet.every((l) => l.length > 0);
+    },
     result() {
+      if (!this.isFormValid) return '';
+
       return [...this.textCleared].map((letter, index) => {
         const encryptionKeyLetter = this.encryptionKey[index % this.encryptionKey.length];
         const encryptionKeyValue = this.getLetterCode(encryptionKeyLetter);
@@ -114,6 +123,8 @@ export default {
     },
     textMapped() {
       const size = this.encryptionKey.length;
+
+      if (!size) return [];
 
       const textMapped = [...this.textCleared].map((letter, index) => ({
         letter,
