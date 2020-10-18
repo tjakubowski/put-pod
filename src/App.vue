@@ -53,7 +53,7 @@
 
 <script>
 import BaseCard from '@/components/BaseCard';
-import AlphabetTable from "@/components/AlphabetTable";
+import AlphabetTable from '@/components/AlphabetTable';
 
 export default {
   name: 'App',
@@ -63,22 +63,43 @@ export default {
   },
   data() {
     return {
+      alphabetMatrixSize: 5,
       encrypt: true,
       textFile: null,
       text: '',
       alphabet: [],
       encryptionKey: '',
+      encryptionKeyRules: [
+        (v) => [...v].every((letter) => this.alphabet.includes(letter)) || 'Encryption key must contain alphabet characters only',
+        (v) => !!v || 'Encryption key is required',
+        (v) => (v && v.length >= 2) || 'Encryption key must be more than 2 characters',
+      ],
     };
   },
   computed: {
     result() {
-      return '';
+      return [...this.text].map((letter, index) => {
+        const encryptionKeyLetter = this.encryptionKey[index % this.encryptionKey.length];
+        const encryptionKeyValue = this.getLetterCode(encryptionKeyLetter);
+        const letterValue = this.getLetterCode(letter);
+
+        return ((encryptionKeyValue + letterValue) % 100).toString().padStart(2, '0');
+      });
     },
     textLabel() {
       return this.encrypt ? 'Plaintext' : 'Encoded text';
     },
   },
+  watch: {
+    encryptionKey(newValue, previousValue) {
+      return [...newValue].filter((letter) => this.alphabet.includes(letter));
+    },
+  },
   methods: {
+    getLetterCode(letter) {
+      const index = this.alphabet.indexOf(letter);
+      return Math.floor(index / this.alphabetMatrixSize + 1) * 10 + index % this.alphabetMatrixSize + 1;
+    },
     deleteFile() {
       this.textFile = null;
     },
