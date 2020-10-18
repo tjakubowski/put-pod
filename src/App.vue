@@ -25,7 +25,17 @@
 
           <v-col cols="12" md="6" lg="4">
             <base-card title="Secrets" icon="key-outline">
-              <AlphabetTable @input="updateAlphabet" :size="alphabetMatrixSize"/>
+              <template v-slot:actions>
+                <v-btn text class="error--text" @click="clearSecrets">
+                  <v-icon left>
+                    mdi-delete-outline
+                  </v-icon>
+                  Clear</v-btn>
+              </template>
+
+              <v-text-field v-model.number="alphabetMatrixSize" label="Size" filled dense type="number"/>
+
+              <AlphabetTable v-model="alphabet"/>
               <v-divider class="my-3"/>
               <v-text-field v-model="encryptionKey" :rules="encryptionKeyRules" label="Key" filled dense/>
             </base-card>
@@ -74,6 +84,11 @@ export default {
       ],
     };
   },
+  watch: {
+    alphabetMatrixSize(value) {
+      if (Number.isInteger(value)) this.resizeAlphabet();
+    },
+  },
   computed: {
     result() {
       return [...this.text].map((letter, index) => {
@@ -88,12 +103,18 @@ export default {
       return this.encrypt ? 'Plaintext' : 'Encoded text';
     },
   },
-  watch: {
-    encryptionKey(newValue, previousValue) {
-      return [...newValue].filter((letter) => this.alphabet.includes(letter));
-    },
-  },
   methods: {
+    resizeAlphabet() {
+      const targetAlphabetSize = this.alphabetMatrixSize * this.alphabetMatrixSize;
+      const currentAlphabetSize = this.alphabet.length;
+
+      if (targetAlphabetSize < currentAlphabetSize) {
+        this.alphabet.splice(targetAlphabetSize);
+      } else if (targetAlphabetSize > currentAlphabetSize) {
+        const newEmptyEntries = Array.from({ length: targetAlphabetSize - currentAlphabetSize }, () => '');
+        this.alphabet = [...this.alphabet, ...newEmptyEntries];
+      }
+    },
     getLetterCode(letter) {
       const index = this.alphabet.indexOf(letter);
       return Math.floor(index / this.alphabetMatrixSize + 1) * 10 + index % this.alphabetMatrixSize + 1;
@@ -104,12 +125,13 @@ export default {
     clearText() {
       this.text = '';
     },
+    clearSecrets() {
+      this.alphabet = this.alphabet.map((letter) => '');
+      this.encryptionKey = '';
+    },
     reverse() {
       this.text = this.result;
       this.encrypt = !this.encrypt;
-    },
-    updateAlphabet(alphabet) {
-      this.alphabet = alphabet;
     },
     readFile(file) {
       const reader = new FileReader();
@@ -118,6 +140,9 @@ export default {
       };
       reader.readAsText(file);
     },
+  },
+  created() {
+    this.resizeAlphabet();
   },
 };
 </script>

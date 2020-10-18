@@ -4,15 +4,15 @@
       <tr>
         <th></th>
         <th
-            v-for="y in size" :key="`top-${y}`">
+            v-for="y in alphabetMatrixSize" :key="`top-${y}`">
           {{ y }}
         </th>
       </tr>
-      <tr v-for="y in size" :key="`left-${y}`">
+      <tr v-for="y in alphabetMatrixSize" :key="`left-${y}`">
         <th>
           {{ y }}
         </th>
-        <td v-for="x in size" :key="`value-${x}`">
+        <td v-for="x in alphabetMatrixSize" :key="`value-${x}`">
           <label>
             <input type="text"
                    maxlength="1"
@@ -32,25 +32,26 @@
 <script>
 export default {
   name: 'AlphabetTable',
+  model: {
+    prop: 'alphabet',
+  },
   props: {
-    size: {
-      type: Number,
-      default: 5,
+    alphabet: {
+      type: Array,
+      required: true,
     },
   },
-  data() {
-    return {
-      alphabet: [],
-    };
-  },
   computed: {
+    alphabetMatrixSize() {
+      return Math.sqrt(this.alphabet.length);
+    },
     alphabetOccurrences() {
       return this.alphabet.reduce((prev, curr) => {
         if (curr !== '') prev[curr] = ++prev[curr] || 1;
         return prev;
       }, {});
     },
-    isCorrect() {
+    isValid() {
       return Object.keys(this.alphabetOccurrences).length === this.alphabet.length;
     },
   },
@@ -69,7 +70,7 @@ export default {
       } else event.target.value = '';
     },
     getCellIndex({ x, y }) {
-      return (y - 1) * this.size + x - 1;
+      return (y - 1) * this.alphabetMatrixSize + x - 1;
     },
     cellClasses(position) {
       const cell = this.alphabet[this.getCellIndex(position)];
@@ -81,10 +82,6 @@ export default {
     emitValue() {
       this.$emit('input', this.alphabet);
     },
-  },
-  created() {
-    this.alphabet = Array.from({ length: this.size * this.size }, () => '');
-    this.emitValue();
   },
 };
 </script>
@@ -120,7 +117,6 @@ export default {
       border-color: var(--v-error-base);
     }
   }
-
 }
 
 </style>
