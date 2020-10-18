@@ -110,7 +110,7 @@ export default {
         const letterValue = this.getLetterCode(letter);
 
         return ((encryptionKeyValue + letterValue) % 100).toString().padStart(2, '0');
-      });
+      }).join(' ');
     },
     encryptionKeyMapped() {
       return [...this.encryptionKey].map((letter) => ({
