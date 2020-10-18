@@ -2,7 +2,18 @@
   <div class="alphabet-table">
     <table v-cloak>
       <tr>
-        <th></th>
+        <th>
+          <v-btn x-small icon
+                 :disabled="alphabetMatrixSize >= maxAlphabetMatrixSize"
+                 @click="$emit('increase')">
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+          <v-btn x-small icon
+                 :disabled="alphabetMatrixSize <= minAlphabetMatrixSize"
+                 @click="$emit('decrease')">
+            <v-icon>mdi-minus</v-icon>
+          </v-btn>
+        </th>
         <th
             v-for="y in alphabetMatrixSize" :key="`top-${y}`">
           {{ y }}
@@ -26,12 +37,15 @@
         </td>
       </tr>
     </table>
+    <base-error class="px-2" :is-valid="isValid">Alphabet characters are missing</base-error>
   </div>
 </template>
 
 <script>
+import BaseError from "@/components/BaseError";
 export default {
   name: 'AlphabetTable',
+  components: {BaseError},
   model: {
     prop: 'alphabet',
   },
@@ -39,6 +53,14 @@ export default {
     alphabet: {
       type: Array,
       required: true,
+    },
+    maxAlphabetMatrixSize: {
+      type: Number,
+      default: 6,
+    },
+    minAlphabetMatrixSize: {
+      type: Number,
+      default: 2,
     },
   },
   computed: {
@@ -118,5 +140,4 @@ export default {
     }
   }
 }
-
 </style>

@@ -33,9 +33,7 @@
                   Clear</v-btn>
               </template>
 
-              <v-text-field v-model.number="alphabetMatrixSize" label="Size" filled dense type="number"/>
-
-              <AlphabetTable v-model="alphabet"/>
+              <AlphabetTable v-model="alphabet" @increase="alphabetMatrixSize++" @decrease="alphabetMatrixSize--"/>
               <v-divider class="my-3"/>
               <v-text-field v-model="encryptionKey" :rules="encryptionKeyRules" label="Key" filled dense/>
             </base-card>
@@ -117,7 +115,7 @@ export default {
     },
     getLetterCode(letter) {
       const index = this.alphabet.indexOf(letter);
-      return Math.floor(index / this.alphabetMatrixSize + 1) * 10 + index % this.alphabetMatrixSize + 1;
+      return Math.floor(index / this.alphabetMatrixSize + 1) * 10 + (index % this.alphabetMatrixSize) + 1;
     },
     deleteFile() {
       this.textFile = null;
