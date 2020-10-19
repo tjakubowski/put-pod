@@ -50,7 +50,7 @@
               <encryption-table
                 v-show="isFormValid"
                 :encryption-key="encryptionKeyMapped"
-                :text="textMapped"
+                :text="inputMapped"
               />
             </base-card>
           </v-col>
@@ -96,7 +96,7 @@ export default {
   },
   computed: {
     isFormValid() {
-      return this.textCleared.length > 0
+      return this.inputCleared.length > 0
         && this.encryptionKey.length > 0
         && [...this.encryptionKey].every((encryptionLetter) => this.alphabet.includes(encryptionLetter))
         && this.alphabet.every((l) => l.length > 0);
@@ -104,13 +104,9 @@ export default {
     result() {
       if (!this.isFormValid) return '';
 
-      return [...this.textCleared].map((letter, index) => {
-        const encryptionKeyLetter = this.encryptionKey[index % this.encryptionKey.length];
-        const encryptionKeyValue = this.getLetterCode(encryptionKeyLetter);
-        const letterValue = this.getLetterCode(letter);
-
-        return ((encryptionKeyValue + letterValue) % 100).toString().padStart(2, '0');
-      }).join(' ');
+      return this.encrypt
+        ? this.inputMapped.flat().map(({ letter, value }) => value).join(' ')
+        : this.inputMapped.flat().map(({ letter, value }) => letter).join('');
     },
     encryptionKeyMapped() {
       return [...this.encryptionKey].map((letter) => ({
@@ -118,20 +114,34 @@ export default {
         value: this.getLetterCode(letter),
       }));
     },
-    textCleared() {
+    inputCleared() {
       return this.text.replace(/\W/g, '');
     },
-    textMapped() {
-      const size = this.encryptionKey.length;
+    inputMapped() {
+      if (!this.isFormValid) return [];
 
-      if (!size) return [];
+      const encryptionKeyLength = this.encryptionKey.length;
+      let input = [];
 
-      const textMapped = [...this.textCleared].map((letter, index) => ({
-        letter,
-        value: this.getLetterCode(letter) + this.getLetterCode(this.encryptionKey[index % this.encryptionKey.length]),
-      }));
+      if (this.encrypt) {
+        input = [...this.inputCleared].map((letter, index) => ({
+          letter,
+          value: ((this.getLetterCode(letter) + this.getLetterCode(this.encryptionKey[index % encryptionKeyLength])) % 100).toString().padStart(2, '0'),
+        }));
+      } else {
+        input = Array.from({ length: Math.ceil(this.inputCleared.length / 2) }, (v, i) => this.inputCleared.slice(i * 2, i * 2 + 2))
+          .map((code, index) => {
+            let alphabetPosition = +code - this.getLetterCode(this.encryptionKey[index % encryptionKeyLength]);
+            if (alphabetPosition < 0) alphabetPosition += 100;
+            const alphabetIndex = (Math.floor(alphabetPosition / 10) - 1) * 5 + ((alphabetPosition - 1) % 5);
+            return {
+              letter: this.alphabet[alphabetIndex] || '-',
+              value: code,
+            };
+          });
+      }
 
-      return Array.from({ length: Math.ceil(textMapped.length / size) }, (v, i) => textMapped.slice(i * size, i * size + size));
+      return Array.from({ length: Math.ceil(input.length / encryptionKeyLength) }, (v, i) => input.slice(i * encryptionKeyLength, i * encryptionKeyLength + encryptionKeyLength));
     },
     textLabel() {
       return this.encrypt ? 'Plaintext' : 'Encoded text';
@@ -160,7 +170,7 @@ export default {
       this.text = '';
     },
     clearSecrets() {
-      this.alphabet = this.alphabet.map((letter) => '');
+      this.alphabet = this.alphabet.map(() => '');
       this.encryptionKey = '';
     },
     reverse() {
