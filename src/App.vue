@@ -7,6 +7,16 @@
 
     <v-main>
       <v-container>
+
+        <v-row>
+          <v-col class="text-right">
+            <v-btn text @click="reverse">
+              <v-icon left v-text="'mdi-swap-vertical'" :class="{'v-icon--rotate': !encrypt}"/>
+              {{ encrypt ? 'Encrypt' : 'Decrypt' }}
+            </v-btn>
+          </v-col>
+        </v-row>
+
         <v-row>
 
           <v-col cols="12" md="6" lg="4">
@@ -47,11 +57,6 @@
 
           <v-col cols="12" md="6" lg="4">
             <base-card title="Result" icon="lock-outline">
-              <template v-slot:actions>
-                <v-btn text @click="reverse">
-                  <v-icon left v-text="'mdi-swap-vertical'"/>
-                  Reverse</v-btn>
-              </template>
               <v-textarea :value="result" label="Encrypted text" readonly filled dense/>
               <encryption-table
                 v-show="isFormValid"
@@ -203,5 +208,9 @@ export default {
 <style lang="scss">
 .theme--light.v-application {
   background-color: var(--v-background-base, white) !important;
+}
+
+.v-icon--rotate {
+  transform: rotate(180deg);
 }
 </style>
