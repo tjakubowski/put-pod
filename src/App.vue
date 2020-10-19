@@ -33,9 +33,15 @@
                   Clear</v-btn>
               </template>
 
-              <AlphabetTable v-model="alphabet" @increase="alphabetMatrixSize++" @decrease="alphabetMatrixSize--"/>
+              <AlphabetTable v-model="alphabet"
+                             @increase="alphabetMatrixSize++"
+                             @decrease="alphabetMatrixSize--"
+                             :is-valid="isAlphabetValid"/>
               <v-divider class="mb-3"/>
-              <v-text-field v-model="encryptionKey" :rules="encryptionKeyRules" label="Key" filled dense/>
+              <v-text-field v-model="encryptionKey"
+                            :rules="encryptionKeyRules"
+                            label="Key"
+                            filled dense/>
             </base-card>
           </v-col>
 
@@ -95,11 +101,14 @@ export default {
     },
   },
   computed: {
+    isAlphabetValid() {
+      return this.alphabet.every(l => l.length > 0);
+    },
     isFormValid() {
       return this.inputCleared.length > 0
         && this.encryptionKey.length > 0
         && [...this.encryptionKey].every((encryptionLetter) => this.alphabet.includes(encryptionLetter))
-        && this.alphabet.every((l) => l.length > 0);
+        && this.isAlphabetValid;
     },
     result() {
       if (!this.isFormValid) return '';

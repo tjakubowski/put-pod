@@ -63,13 +63,14 @@ export default {
       type: Number,
       default: 2,
     },
+    isValid: {
+      type: Boolean,
+      required: true,
+    },
   },
   computed: {
     alphabetMatrixSize() {
       return Math.sqrt(this.alphabet.length);
-    },
-    isValid() {
-      return this.alphabet.every(l => l.length > 0);
     },
   },
   methods: {
