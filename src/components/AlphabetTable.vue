@@ -68,12 +68,6 @@ export default {
     alphabetMatrixSize() {
       return Math.sqrt(this.alphabet.length);
     },
-    alphabetOccurrences() {
-      return this.alphabet.reduce((prev, curr) => {
-        if (curr !== '') prev[curr] = ++prev[curr] || 1;
-        return prev;
-      }, {});
-    },
     isValid() {
       return this.alphabet.every(l => l.length > 0);
     },
