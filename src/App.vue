@@ -28,7 +28,7 @@
                   </v-icon>
                   Clear</v-btn>
               </template>
-              <v-textarea v-model="text" @input="deleteFile" :label="textLabel" filled dense/>
+              <v-textarea v-model="text" @input="deleteFile" :label="encrypt ? 'Plaintext' : 'Encoded text'" filled dense/>
               <v-file-input @change="readFile" v-model="textFile" label="Plaintext file" filled dense/>
             </base-card>
           </v-col>
@@ -107,7 +107,7 @@ export default {
   },
   computed: {
     isAlphabetValid() {
-      return this.alphabet.every(l => l.length > 0);
+      return this.alphabet.every((l) => l.length > 0);
     },
     isFormValid() {
       return this.inputCleared.length > 0
@@ -134,20 +134,27 @@ export default {
     inputMapped() {
       if (!this.isFormValid) return [];
 
+      const codeLength = this.alphabetMatrixSize <= 5 ? 2 : 3;
       const encryptionKeyLength = this.encryptionKey.length;
       let input = [];
 
       if (this.encrypt) {
-        input = [...this.inputCleared].map((letter, index) => ({
-          letter,
-          value: ((this.getLetterCode(letter) + this.getLetterCode(this.encryptionKey[index % encryptionKeyLength])) % 100).toString().padStart(2, '0'),
-        }));
+        input = [...this.inputCleared].map((letter, index) => {
+          let code = this.getLetterCode(letter) + this.getLetterCode(this.encryptionKey[index % encryptionKeyLength]);
+
+          if (this.alphabetMatrixSize <= 5) code %= 100;
+
+          return {
+            letter,
+            value: code.toString().padStart(codeLength, '0'),
+          };
+        });
       } else {
-        input = Array.from({ length: Math.ceil(this.inputCleared.length / 2) }, (v, i) => this.inputCleared.slice(i * 2, i * 2 + 2))
+        input = Array.from({ length: Math.ceil(this.inputCleared.length / codeLength) }, (v, i) => this.inputCleared.slice(i * codeLength, i * codeLength + codeLength))
           .map((code, index) => {
             let alphabetPosition = +code - this.getLetterCode(this.encryptionKey[index % encryptionKeyLength]);
-            if (alphabetPosition < 0) alphabetPosition += 100;
-            const alphabetIndex = (Math.floor(alphabetPosition / 10) - 1) * 5 + ((alphabetPosition - 1) % 5);
+            if (alphabetPosition < 0 && this.alphabetMatrixSize <= 5) alphabetPosition += 100;
+            const alphabetIndex = (+(''+alphabetPosition)[0] - 1) * this.alphabetMatrixSize + (+(''+alphabetPosition)[1] - 1);
             return {
               letter: this.alphabet[alphabetIndex] || '-',
               value: code,
@@ -156,9 +163,6 @@ export default {
       }
 
       return Array.from({ length: Math.ceil(input.length / encryptionKeyLength) }, (v, i) => input.slice(i * encryptionKeyLength, i * encryptionKeyLength + encryptionKeyLength));
-    },
-    textLabel() {
-      return this.encrypt ? 'Plaintext' : 'Encoded text';
     },
   },
   methods: {

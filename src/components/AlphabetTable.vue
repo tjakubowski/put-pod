@@ -77,9 +77,8 @@ export default {
     onInput(event, position) {
       const index = this.getCellIndex(position);
 
-      if (!this.alphabet.includes(event.target.value)
-        && /\w/.test(event.target.value) || event.target.value.length === 0
-      ) {
+      if (!this.alphabet.includes(event.target.value) && event.target.value.length !== 0 )
+      {
         const nextInput = document.querySelector(
           `.alphabet-table__input[data-index='${index + 1}']`,
         );
