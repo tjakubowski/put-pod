@@ -36,6 +36,11 @@
           <v-col cols="12" md="6" lg="4">
             <base-card title="Secrets" icon="key-outline">
               <template v-slot:actions>
+                <v-btn text @click="shuffleAlphabet">
+                  <v-icon left>
+                    mdi-shuffle
+                  </v-icon>
+                  Shuffle</v-btn>
                 <v-btn text class="error--text" @click="clearSecrets">
                   <v-icon left>
                     mdi-delete-outline
@@ -180,6 +185,14 @@ export default {
     getLetterCode(letter) {
       const index = this.alphabet.indexOf(letter);
       return Math.floor(index / this.alphabetMatrixSize + 1) * 10 + (index % this.alphabetMatrixSize) + 1;
+    },
+    shuffleAlphabet() {
+      const array = [...this.alphabet];
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      this.alphabet = array;
     },
     deleteFile() {
       this.textFile = null;
