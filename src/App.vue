@@ -6,7 +6,7 @@
     </v-app-bar>
 
     <v-main>
-      <v-container>
+      <v-container fluid>
 
         <v-row>
           <v-col class="text-right">
@@ -19,7 +19,7 @@
 
         <v-row>
 
-          <v-col cols="12" md="6" lg="4">
+          <v-col cols="12" md="6" lg="3">
             <base-card title="Input data" icon="text-subject">
               <template v-slot:actions>
                 <v-btn text class="error--text" @click="clearText">
@@ -33,7 +33,7 @@
             </base-card>
           </v-col>
 
-          <v-col cols="12" md="6" lg="4">
+          <v-col cols="12" md="6" lg="6">
             <base-card title="Secrets" icon="key-outline">
               <template v-slot:actions>
                 <v-btn text @click="shuffleAlphabet">
@@ -81,7 +81,7 @@
             </base-card>
           </v-col>
 
-          <v-col cols="12" md="6" lg="4">
+          <v-col cols="12" md="6" lg="3">
             <base-card title="Result" icon="lock-outline">
               <v-textarea :value="result" label="Encrypted text" readonly filled dense/>
               <encryption-table
