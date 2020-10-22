@@ -21,19 +21,23 @@
 
           <v-col cols="12" md="6" lg="3">
             <base-card title="Input data" icon="text-subject">
-              <v-textarea v-model="text" @input="deleteFile" :label="encrypt ? 'Plaintext' : 'Encoded text'" filled dense :rules="textRules"/>
-              <v-file-input @change="readFile" v-model="textFile" label="Plaintext file" filled dense/>
-              <v-divider class="mb-3"/>
-              <div class="text-right">
+              <template v-slot:actions>
                 <v-btn text color="error" @click="clearText">
                   <v-icon left v-text="'mdi-delete-outline'"/> Clear
                 </v-btn>
-              </div>
+              </template>
+              <v-textarea v-model="text" @input="deleteFile" :label="encrypt ? 'Plaintext' : 'Encoded text'" filled dense :rules="textRules"/>
+              <v-file-input @change="readFile" v-model="textFile" label="Plaintext file" filled dense/>
             </base-card>
           </v-col>
 
           <v-col cols="12" md="6" lg="6">
             <base-card title="Secrets" icon="key-outline">
+              <template v-slot:actions>
+                <v-btn text color="error" @click="clearSecrets">
+                  <v-icon left v-text="'mdi-delete-outline'"/> Clear
+                </v-btn>
+              </template>
 
               <div class="text-right">
                 <v-menu
@@ -59,9 +63,6 @@
                 <v-btn text color="primary" @click="shuffleAlphabet">
                   <v-icon left v-text="'mdi-shuffle'"/> Shuffle
                 </v-btn>
-                <v-btn text color="error" @click="clearAlphabet">
-                  <v-icon left v-text="'mdi-delete-outline'"/> Clear
-                </v-btn>
               </div>
 
               <AlphabetTable v-model="alphabet"
@@ -82,20 +83,38 @@
 
           <v-col cols="12" md="6" lg="3">
             <base-card title="Result" icon="lock-outline">
-              <v-textarea :value="result" label="Encrypted text" readonly filled dense/>
-
-              <v-divider class="mb-3"/>
-
-              <div class="text-right">
+              <template v-slot:actions>
                 <v-btn text color="primary" @click="downloadResult" :disabled="result.length === 0">
                   <v-icon left v-text="'mdi-download'"/> Download
                 </v-btn>
-              </div>
-              <encryption-table
-                v-show="isFormValid"
-                :encryption-key="encryptionKeyMapped"
-                :text="inputMapped"
-              />
+              </template>
+
+              <v-textarea :value="result" label="Encrypted text" readonly filled dense/>
+
+              <v-card-actions>
+                <v-spacer/>
+
+                <v-btn
+                  icon
+                  @click="encryptionTableShow = !encryptionTableShow"
+                >
+                  <v-icon>{{ encryptionTableShow ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+                </v-btn>
+              </v-card-actions>
+
+              <v-expand-transition>
+                <div v-show="encryptionTableShow">
+                  <v-divider class="mb-3"/>
+
+                  <encryption-table
+                    v-show="isFormValid"
+                    :encryption-key="encryptionKeyMapped"
+                    :text="inputMapped"
+                  />
+                  <div class="text-center caption" v-show="!isFormValid">Encryption table not available</div>
+                </div>
+              </v-expand-transition>
+
             </base-card>
           </v-col>
 
@@ -138,11 +157,15 @@ export default {
         (v) => !!v || 'Encryption key is required',
         (v) => (v && v.length >= 2) || 'Encryption key must be more than 2 characters',
       ],
+      encryptionTableShow: true,
     };
   },
   watch: {
     alphabetMatrixSize(value) {
       if (Number.isInteger(value)) this.resizeAlphabet();
+    },
+    inputMapped(value) {
+      if (value.length > 0 && value[0].length > 6 || value.length > 4) this.encryptionTableShow = false;
     },
   },
   computed: {
@@ -239,8 +262,9 @@ export default {
     clearText() {
       this.text = '';
     },
-    clearAlphabet() {
+    clearSecrets() {
       this.alphabet = this.alphabet.map(() => '');
+      this.encryptionKey = '';
     },
     reverse() {
       this.text = this.result;
