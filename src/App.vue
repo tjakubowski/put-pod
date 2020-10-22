@@ -48,6 +48,26 @@
                   Clear</v-btn>
               </template>
 
+              <v-menu
+                v-model="alphabetCreatorMenu"
+                :close-on-content-click="false"
+                :nudge-width="200"
+                offset-x
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    v-on="on"
+                    text
+                    block
+                  >
+                    Presets
+                  </v-btn>
+                </template>
+
+                <AlphabetCreator @input="setAlphabetPreset"/>
+              </v-menu>
+
               <AlphabetTable v-model="alphabet"
                              @increase="alphabetMatrixSize++"
                              @decrease="alphabetMatrixSize--"
@@ -82,16 +102,19 @@
 import BaseCard from '@/components/BaseCard';
 import AlphabetTable from '@/components/AlphabetTable';
 import EncryptionTable from '@/components/EncryptionTable';
+import AlphabetCreator from '@/components/AlphabetCreator';
 
 export default {
   name: 'App',
   components: {
+    AlphabetCreator,
     EncryptionTable,
     AlphabetTable,
     BaseCard,
   },
   data() {
     return {
+      alphabetCreatorMenu: false,
       alphabetMatrixSize: 5,
       encrypt: true,
       textFile: null,
@@ -102,6 +125,16 @@ export default {
         (v) => [...v].every((letter) => this.alphabet.includes(letter)) || 'Encryption key must contain alphabet characters only',
         (v) => !!v || 'Encryption key is required',
         (v) => (v && v.length >= 2) || 'Encryption key must be more than 2 characters',
+      ],
+      alphabetPresets: [
+        {
+          name: 'Small polish alphabet',
+          alphabet: ['a', 'ą', 'b', 'c', 'ć', 'd', 'e', 'ę', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'ł', 'm', 'n', 'ń', 'o', 'ó', 'p', 'q', 'r', 's', 'ś', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'ź', 'ż', ' '],
+        },
+        {
+          name: 'Big polish alphabet',
+          alphabet: ['A', 'Ą', 'B', 'C', 'Ć', 'D', 'E', 'Ę', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'Ł', 'M', 'N', 'Ń', 'O', 'Ó', 'P', 'Q', 'R', 'S', 'Ś', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'Ź', 'Ż', ' '],
+        },
       ],
     };
   },
@@ -159,7 +192,7 @@ export default {
           .map((code, index) => {
             let alphabetPosition = +code - this.getLetterCode(this.encryptionKey[index % encryptionKeyLength]);
             if (alphabetPosition < 0 && this.alphabetMatrixSize <= 5) alphabetPosition += 100;
-            const alphabetIndex = (+(''+alphabetPosition)[0] - 1) * this.alphabetMatrixSize + (+(''+alphabetPosition)[1] - 1);
+            const alphabetIndex = (+(`${alphabetPosition}`)[0] - 1) * this.alphabetMatrixSize + (+(`${alphabetPosition}`)[1] - 1);
             return {
               letter: this.alphabet[alphabetIndex] || '-',
               value: code,
@@ -181,6 +214,9 @@ export default {
         const newEmptyEntries = Array.from({ length: targetAlphabetSize - currentAlphabetSize }, () => '');
         this.alphabet = [...this.alphabet, ...newEmptyEntries];
       }
+    },
+    setAlphabetPreset(preset) {
+      this.alphabet = preset;
     },
     getLetterCode(letter) {
       const index = this.alphabet.indexOf(letter);
