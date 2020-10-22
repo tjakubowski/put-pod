@@ -83,6 +83,14 @@
           <v-col cols="12" md="6" lg="3">
             <base-card title="Result" icon="lock-outline">
               <v-textarea :value="result" label="Encrypted text" readonly filled dense/>
+
+              <v-divider class="mb-3"/>
+
+              <div class="text-right">
+                <v-btn text color="primary" @click="downloadResult" :disabled="result.length === 0">
+                  <v-icon left v-text="'mdi-download'"/> Download
+                </v-btn>
+              </div>
               <encryption-table
                 v-show="isFormValid"
                 :encryption-key="encryptionKeyMapped"
@@ -103,6 +111,7 @@ import BaseCard from '@/components/BaseCard';
 import AlphabetTable from '@/components/AlphabetTable';
 import EncryptionTable from '@/components/EncryptionTable';
 import AlphabetCreator from '@/components/AlphabetCreator';
+import fileDownload from 'js-file-download';
 
 export default {
   name: 'App',
@@ -236,6 +245,9 @@ export default {
     reverse() {
       this.text = this.result;
       this.encrypt = !this.encrypt;
+    },
+    downloadResult() {
+      fileDownload(this.result, `${this.encrypt ? 'encryption' : 'decryption'}-result.txt`);
     },
     readFile(file) {
       const reader = new FileReader();
