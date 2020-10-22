@@ -51,6 +51,7 @@
               <v-menu
                 v-model="alphabetCreatorMenu"
                 :close-on-content-click="false"
+                :close-on-click="false"
                 :nudge-width="200"
                 offset-x
               >
@@ -65,7 +66,7 @@
                   </v-btn>
                 </template>
 
-                <AlphabetCreator @input="setAlphabetPreset"/>
+                <AlphabetCreator @input="setAlphabetPreset" @close="alphabetCreatorMenu = !alphabetCreatorMenu"/>
               </v-menu>
 
               <AlphabetTable v-model="alphabet"

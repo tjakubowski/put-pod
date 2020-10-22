@@ -12,6 +12,7 @@
         hint="Create an alphabet from presets"
         multiple
         persistent-hint
+        dense
       >
         <template v-slot:selection="{ item, index }">
           <span v-if="index === 0">
@@ -81,6 +82,7 @@ export default {
   methods: {
     close() {
       this.$emit('close');
+      this.selectedPresets = null;
     },
     create() {
       const createdAlphabet = this.selectedPresets.flat();
