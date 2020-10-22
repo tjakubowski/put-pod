@@ -38,7 +38,7 @@
         </td>
       </tr>
     </table>
-    <base-error class="px-2 mt-1" :is-valid="isValid">Alphabet characters are missing</base-error>
+    <base-error class="px-2 mt-1" :is-valid="isAlphabetEmpty || !(dirty && !isValid)">Alphabet characters are missing</base-error>
   </div>
 </template>
 
@@ -48,6 +48,11 @@ import BaseError from '@/components/BaseError';
 export default {
   name: 'AlphabetTable',
   components: { BaseError },
+  data() {
+    return {
+      dirty: false,
+    };
+  },
   model: {
     prop: 'alphabet',
   },
@@ -73,13 +78,17 @@ export default {
     alphabetMatrixSize() {
       return Math.sqrt(this.alphabet.length);
     },
+    isAlphabetEmpty() {
+      return this.alphabet.every((l) => !l.length);
+    },
   },
   methods: {
     onInput(event, position) {
+      this.dirty = true;
+
       const index = this.getCellIndex(position);
 
-      if (!this.alphabet.includes(event.target.value) && event.target.value.length !== 0 )
-      {
+      if (!this.alphabet.includes(event.target.value) && event.target.value.length !== 0) {
         this.focusNextInput(index);
 
         this.$set(this.alphabet, index, event.target.value);
@@ -97,7 +106,6 @@ export default {
         nextInput.focus();
         this.selectInputContent(nextInput);
       }
-
     },
     getCellIndex({ x, y }) {
       return (y - 1) * this.alphabetMatrixSize + x - 1;
