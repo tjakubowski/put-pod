@@ -49,7 +49,7 @@ export default {
   data() {
     return {
       menu: false,
-      selectedPresets: null,
+      selectedPresets: [],
       presets: [
         {
           name: 'Small letters',
@@ -82,9 +82,11 @@ export default {
   methods: {
     close() {
       this.$emit('close');
-      this.selectedPresets = null;
+      this.selectedPresets = [];
     },
     create() {
+      if (this.selectedPresets.length === 0) return;
+
       const createdAlphabet = this.selectedPresets.flat();
       const createdAlphabetTargetSize = Math.ceil(Math.sqrt(createdAlphabet.length));
       const newEmptyEntries = Array.from({ length: createdAlphabetTargetSize * createdAlphabetTargetSize - createdAlphabet.length }, () => '');
