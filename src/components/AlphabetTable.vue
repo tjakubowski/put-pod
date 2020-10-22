@@ -31,6 +31,7 @@
                    :data-index="getCellIndex({x,y})"
                    :value="alphabet[getCellIndex({x,y})]"
                    @input="onInput($event, {x, y})"
+                   @click="selectInputContent($event.target)"
             >
             <span class="caption">{{ y }}{{ x }}</span>
           </label>
@@ -79,14 +80,24 @@ export default {
 
       if (!this.alphabet.includes(event.target.value) && event.target.value.length !== 0 )
       {
-        const nextInput = document.querySelector(
-          `.alphabet-table__input[data-index='${index + 1}']`,
-        );
-        if (nextInput) nextInput.focus();
+        this.focusNextInput(index);
 
         this.$set(this.alphabet, index, event.target.value);
         this.emitValue();
       } else event.target.value = '';
+    },
+    selectInputContent(input) {
+      input.setSelectionRange(0, input.value.length);
+    },
+    focusNextInput(currentIndex) {
+      const nextInput = document.querySelector(
+        `.alphabet-table__input[data-index='${currentIndex + 1}']`,
+      );
+      if (nextInput) {
+        nextInput.focus();
+        this.selectInputContent(nextInput);
+      }
+
     },
     getCellIndex({ x, y }) {
       return (y - 1) * this.alphabetMatrixSize + x - 1;
