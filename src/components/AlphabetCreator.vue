@@ -1,6 +1,5 @@
 <template>
   <v-card>
-    <v-divider></v-divider>
 
     <v-card-text>
       <v-select
@@ -26,6 +25,7 @@
       <v-spacer></v-spacer>
 
       <v-btn
+        color="primary"
         text
         @click="close"
       >

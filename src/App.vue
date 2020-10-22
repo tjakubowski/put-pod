@@ -10,7 +10,7 @@
 
         <v-row>
           <v-col class="text-right">
-            <v-btn text @click="reverse">
+            <v-btn outlined text @click="reverse">
               <v-icon left v-text="'mdi-swap-vertical'" :class="{'v-icon--rotate': !encrypt}"/>
               {{ encrypt ? 'Encrypt' : 'Decrypt' }}
             </v-btn>
@@ -21,63 +21,62 @@
 
           <v-col cols="12" md="6" lg="3">
             <base-card title="Input data" icon="text-subject">
-              <template v-slot:actions>
-                <v-btn text class="error--text" @click="clearText">
-                  <v-icon left>
-                    mdi-delete-outline
-                  </v-icon>
-                  Clear</v-btn>
-              </template>
               <v-textarea v-model="text" @input="deleteFile" :label="encrypt ? 'Plaintext' : 'Encoded text'" filled dense :rules="textRules"/>
               <v-file-input @change="readFile" v-model="textFile" label="Plaintext file" filled dense/>
+              <v-divider class="mb-3"/>
+              <div class="text-right">
+                <v-btn text color="error" @click="clearText">
+                  <v-icon left v-text="'mdi-delete-outline'"/> Clear
+                </v-btn>
+              </div>
             </base-card>
           </v-col>
 
           <v-col cols="12" md="6" lg="6">
             <base-card title="Secrets" icon="key-outline">
-              <template v-slot:actions>
-                <v-btn text @click="shuffleAlphabet">
-                  <v-icon left>
-                    mdi-shuffle
-                  </v-icon>
-                  Shuffle</v-btn>
-                <v-btn text class="error--text" @click="clearSecrets">
-                  <v-icon left>
-                    mdi-delete-outline
-                  </v-icon>
-                  Clear</v-btn>
-              </template>
 
-              <v-menu
-                v-model="alphabetCreatorMenu"
-                :close-on-content-click="false"
-                :close-on-click="false"
-                :nudge-width="200"
-                offset-x
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    v-bind="attrs"
-                    v-on="on"
-                    text
-                    block
-                  >
-                    Presets
-                  </v-btn>
-                </template>
+              <div class="text-right">
+                <v-menu
+                  v-model="alphabetCreatorMenu"
+                  :close-on-content-click="false"
+                  :close-on-click="false"
+                  :nudge-width="200"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      v-bind="attrs"
+                      v-on="on"
+                      text
+                      color="primary"
+                    >
+                      Presets
+                      <v-icon right v-text="alphabetCreatorMenu ? 'mdi-menu-up' : 'mdi-menu-down'" />
+                    </v-btn>
+                  </template>
 
-                <AlphabetCreator @input="setAlphabetPreset" @close="alphabetCreatorMenu = !alphabetCreatorMenu"/>
-              </v-menu>
+                  <AlphabetCreator @input="setAlphabetPreset" @close="alphabetCreatorMenu = !alphabetCreatorMenu"/>
+                </v-menu>
+                <v-btn text color="primary" @click="shuffleAlphabet">
+                  <v-icon left v-text="'mdi-shuffle'"/> Shuffle
+                </v-btn>
+                <v-btn text color="error" @click="clearAlphabet">
+                  <v-icon left v-text="'mdi-delete-outline'"/> Clear
+                </v-btn>
+              </div>
 
               <AlphabetTable v-model="alphabet"
                              @increase="alphabetMatrixSize++"
                              @decrease="alphabetMatrixSize--"
                              :is-valid="isAlphabetValid"/>
+
               <v-divider class="mb-3"/>
+
               <v-text-field v-model="encryptionKey"
                             :rules="encryptionKeyRules"
                             label="Key"
-                            filled dense/>
+                            clearable
+                            filled
+                            dense/>
             </base-card>
           </v-col>
 
@@ -104,12 +103,10 @@ import BaseCard from '@/components/BaseCard';
 import AlphabetTable from '@/components/AlphabetTable';
 import EncryptionTable from '@/components/EncryptionTable';
 import AlphabetCreator from '@/components/AlphabetCreator';
-import BaseError from "@/components/BaseError";
 
 export default {
   name: 'App',
   components: {
-    BaseError,
     AlphabetCreator,
     EncryptionTable,
     AlphabetTable,
@@ -117,9 +114,9 @@ export default {
   },
   data() {
     return {
+      encrypt: true,
       alphabetCreatorMenu: false,
       alphabetMatrixSize: 5,
-      encrypt: true,
       textFile: null,
       text: '',
       textRules: [
@@ -131,16 +128,6 @@ export default {
         (v) => [...v].every((letter) => this.alphabet.includes(letter)) || 'Encryption key must contain alphabet characters only',
         (v) => !!v || 'Encryption key is required',
         (v) => (v && v.length >= 2) || 'Encryption key must be more than 2 characters',
-      ],
-      alphabetPresets: [
-        {
-          name: 'Small polish alphabet',
-          alphabet: ['a', 'ą', 'b', 'c', 'ć', 'd', 'e', 'ę', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'ł', 'm', 'n', 'ń', 'o', 'ó', 'p', 'q', 'r', 's', 'ś', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'ź', 'ż', ' '],
-        },
-        {
-          name: 'Big polish alphabet',
-          alphabet: ['A', 'Ą', 'B', 'C', 'Ć', 'D', 'E', 'Ę', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'Ł', 'M', 'N', 'Ń', 'O', 'Ó', 'P', 'Q', 'R', 'S', 'Ś', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'Ź', 'Ż', ' '],
-        },
       ],
     };
   },
@@ -223,6 +210,7 @@ export default {
     },
     setAlphabetPreset(preset) {
       this.alphabet = preset;
+      this.alphabetMatrixSize = Math.sqrt(this.alphabet.length);
     },
     getLetterCode(letter) {
       const index = this.alphabet.indexOf(letter);
@@ -242,9 +230,8 @@ export default {
     clearText() {
       this.text = '';
     },
-    clearSecrets() {
+    clearAlphabet() {
       this.alphabet = this.alphabet.map(() => '');
-      this.encryptionKey = '';
     },
     reverse() {
       this.text = this.result;

@@ -3,16 +3,20 @@
     <table v-cloak>
       <tr>
         <th>
-          <v-btn x-small icon
-                 :disabled="alphabetMatrixSize >= maxAlphabetMatrixSize"
-                 @click="$emit('increase')">
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
-          <v-btn x-small icon
-                 :disabled="alphabetMatrixSize <= minAlphabetMatrixSize"
-                 @click="$emit('decrease')">
-            <v-icon>mdi-minus</v-icon>
-          </v-btn>
+          <div>
+            <v-btn x-small icon
+                   :disabled="alphabetMatrixSize >= maxAlphabetMatrixSize"
+                   @click="$emit('increase')">
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+          </div>
+          <div>
+            <v-btn x-small icon
+                   :disabled="alphabetMatrixSize <= minAlphabetMatrixSize"
+                   @click="$emit('decrease')">
+              <v-icon>mdi-minus</v-icon>
+            </v-btn>
+          </div>
         </th>
         <th
             v-for="y in alphabetMatrixSize" :key="`top-${y}`">
