@@ -17,108 +17,111 @@
           </v-col>
         </v-row>
 
+        <v-form ref="form">
         <v-row>
 
-          <v-col cols="12" md="6" lg="3">
-            <base-card title="Input data" icon="text-subject">
-              <template v-slot:actions>
-                <v-btn text color="error" @click="clearText">
-                  <v-icon left v-text="'mdi-delete-outline'"/> Clear
-                </v-btn>
-              </template>
-              <v-textarea v-model="text" @input="deleteFile" :label="encrypt ? 'Plaintext' : 'Encoded text'" filled dense :rules="textRules"/>
-              <v-file-input @change="readFile" v-model="textFile" label="Plaintext file" filled dense/>
-            </base-card>
-          </v-col>
+            <v-col cols="12" md="6" lg="3">
+              <base-card title="Input data" icon="text-subject">
+                <template v-slot:actions>
+                  <v-btn text color="error" @click="clearText">
+                    <v-icon left v-text="'mdi-delete-outline'"/> Clear
+                  </v-btn>
+                </template>
+                <v-textarea v-model="text" @input="deleteFile" :label="encrypt ? 'Plaintext' : 'Encoded text'" filled dense :rules="textRules"/>
+                <v-file-input @change="readFile" v-model="textFile" label="Plaintext file" filled dense/>
+              </base-card>
+            </v-col>
 
-          <v-col cols="12" md="6" lg="6">
-            <base-card title="Secrets" icon="key-outline">
-              <template v-slot:actions>
-                <v-btn text color="error" @click="clearSecrets">
-                  <v-icon left v-text="'mdi-delete-outline'"/> Clear
-                </v-btn>
-              </template>
+            <v-col cols="12" md="6" lg="6">
+              <base-card title="Secrets" icon="key-outline">
+                <template v-slot:actions>
+                  <v-btn text color="error" @click="clearSecrets">
+                    <v-icon left v-text="'mdi-delete-outline'"/> Clear
+                  </v-btn>
+                </template>
 
-              <div class="text-right">
-                <v-menu
-                  v-model="alphabetCreatorMenu"
-                  :close-on-content-click="false"
-                  :close-on-click="false"
-                  :nudge-width="200"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      v-bind="attrs"
-                      v-on="on"
-                      text
-                      color="primary"
-                    >
-                      Presets
-                      <v-icon right v-text="alphabetCreatorMenu ? 'mdi-menu-up' : 'mdi-menu-down'" />
-                    </v-btn>
-                  </template>
+                <div class="text-right">
+                  <v-menu
+                    v-model="alphabetCreatorMenu"
+                    :close-on-content-click="false"
+                    :close-on-click="false"
+                    :nudge-width="200"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        v-bind="attrs"
+                        v-on="on"
+                        text
+                        color="primary"
+                      >
+                        Presets
+                        <v-icon right v-text="alphabetCreatorMenu ? 'mdi-menu-up' : 'mdi-menu-down'" />
+                      </v-btn>
+                    </template>
 
-                  <AlphabetCreator @input="setAlphabetPreset" @close="alphabetCreatorMenu = !alphabetCreatorMenu"/>
-                </v-menu>
-                <v-btn text color="primary" @click="shuffleAlphabet">
-                  <v-icon left v-text="'mdi-shuffle'"/> Shuffle
-                </v-btn>
-              </div>
-
-              <AlphabetTable v-model="alphabet"
-                             @increase="alphabetMatrixSize++"
-                             @decrease="alphabetMatrixSize--"
-                             :is-valid="isAlphabetValid"/>
-
-              <v-divider class="mb-3"/>
-
-              <v-text-field v-model="encryptionKey"
-                            :rules="encryptionKeyRules"
-                            label="Key"
-                            clearable
-                            filled
-                            dense/>
-            </base-card>
-          </v-col>
-
-          <v-col cols="12" md="6" lg="3">
-            <base-card title="Result" icon="lock-outline">
-              <template v-slot:actions>
-                <v-btn text color="primary" @click="downloadResult" :disabled="result.length === 0">
-                  <v-icon left v-text="'mdi-download'"/> Download
-                </v-btn>
-              </template>
-
-              <v-textarea :value="result" label="Encrypted text" readonly filled dense/>
-
-              <v-card-actions>
-                <v-spacer/>
-
-                <v-btn
-                  icon
-                  @click="encryptionTableShow = !encryptionTableShow"
-                >
-                  <v-icon>{{ encryptionTableShow ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
-                </v-btn>
-              </v-card-actions>
-
-              <v-expand-transition>
-                <div v-show="encryptionTableShow">
-                  <v-divider class="mb-3"/>
-
-                  <encryption-table
-                    v-show="isFormValid"
-                    :encryption-key="encryptionKeyMapped"
-                    :text="inputMapped"
-                  />
-                  <div class="text-center caption" v-show="!isFormValid">Encryption table not available</div>
+                    <AlphabetCreator @input="setAlphabetPreset" @close="alphabetCreatorMenu = !alphabetCreatorMenu"/>
+                  </v-menu>
+                  <v-btn text color="primary" @click="shuffleAlphabet">
+                    <v-icon left v-text="'mdi-shuffle'"/> Shuffle
+                  </v-btn>
                 </div>
-              </v-expand-transition>
 
-            </base-card>
-          </v-col>
+                <AlphabetTable v-model="alphabet"
+                               @increase="alphabetMatrixSize++"
+                               @decrease="alphabetMatrixSize--"
+                               :is-valid="isAlphabetValid"/>
 
-        </v-row>
+                <v-divider class="mb-3"/>
+
+                <v-text-field v-model="encryptionKey"
+                              :rules="encryptionKeyRules"
+                              label="Key"
+                              clearable
+                              filled
+                              dense
+                />
+              </base-card>
+            </v-col>
+
+            <v-col cols="12" md="6" lg="3">
+              <base-card title="Result" icon="lock-outline">
+                <template v-slot:actions>
+                  <v-btn text color="primary" @click="downloadResult" :disabled="result.length === 0">
+                    <v-icon left v-text="'mdi-download'"/> Download
+                  </v-btn>
+                </template>
+
+                <v-textarea :value="result" label="Encrypted text" readonly filled dense/>
+
+                <v-card-actions>
+                  <v-spacer/>
+
+                  <v-btn
+                    icon
+                    @click="encryptionTableShow = !encryptionTableShow"
+                  >
+                    <v-icon>{{ encryptionTableShow ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+                  </v-btn>
+                </v-card-actions>
+
+                <v-expand-transition>
+                  <div v-show="encryptionTableShow">
+                    <v-divider class="mb-3"/>
+
+                    <encryption-table
+                      v-show="isFormValid"
+                      :encryption-key="encryptionKeyMapped"
+                      :text="inputMapped"
+                    />
+                    <div class="text-center caption" v-show="!isFormValid">Encryption table not available</div>
+                  </div>
+                </v-expand-transition>
+
+              </base-card>
+            </v-col>
+
+          </v-row>
+        </v-form>
       </v-container>
     </v-main>
 
@@ -167,6 +170,9 @@ export default {
     inputMapped(value) {
       if (value.length > 0 && value[0].length > 6 || value.length > 4) this.encryptionTableShow = false;
     },
+    alphabet() {
+      this.$refs.form.validate();
+    },
   },
   computed: {
     isAlphabetValid() {
@@ -192,7 +198,7 @@ export default {
       }));
     },
     inputCleared() {
-      return this.text.replace(/\W/g, '');
+      return [...this.text].filter(letter => this.alphabet.includes(letter));
     },
     inputMapped() {
       if (!this.isFormValid) return [];
