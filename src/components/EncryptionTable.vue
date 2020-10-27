@@ -3,13 +3,13 @@
   <table>
     <tr>
       <th v-for="{letter, value} in encryptionKey">
-        <div>{{letter}}</div>
+        <div v-html="getLetterOrWhitespace(letter)"></div>
         <span class="caption">{{ value }}</span>
       </th>
     </tr>
     <tr v-for="group in text">
       <td v-for="{letter, value} in group">
-        <div>{{letter}}</div>
+        <div v-html="getLetterOrWhitespace(letter)"></div>
         <span class="caption">{{ value }}</span>
       </td>
     </tr>
@@ -30,6 +30,11 @@ export default {
       required: true,
     },
   },
+  methods: {
+    getLetterOrWhitespace(letter) {
+      return letter === ' ' ? '&nbsp;' : letter;
+    },
+  }
 };
 </script>
 
