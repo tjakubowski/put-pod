@@ -151,7 +151,7 @@ export default {
       textFile: null,
       text: '',
       textRules: [
-        (v) => [...v].every((letter) => this.alphabet.includes(letter)) || 'Some characters in the text are not in the alphabet and will be omitted',
+        (v) => !this.encrypt || [...v].every((letter) => this.alphabet.includes(letter)) || 'Some characters in the text are not in the alphabet and will be omitted',
       ],
       alphabet: [],
       encryptionKey: '',
