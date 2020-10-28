@@ -3,6 +3,65 @@
 
     <v-app-bar app flat color="white">
       <v-toolbar-title>Nihilist substitution</v-toolbar-title>
+      <v-spacer/>
+      <v-dialog
+        v-model="helpDialog"
+        width="600px"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            color="primary"
+            icon
+            v-bind="attrs"
+            v-on="on"
+          >
+            <v-icon>mdi-help-circle-outline</v-icon>
+          </v-btn>
+        </template>
+        <v-card>
+          <v-card-title>
+            <span class="headline">Jak to działa?</span>
+          </v-card-title>
+          <v-stepper
+            v-model="e6"
+            vertical
+          >
+            <v-stepper-step step="1" :complete="e6 > 1" editable edit-icon="$complete">
+              Klucz jawny
+            </v-stepper-step>
+
+            <v-stepper-content step="1">
+              Tekst jawny jest wymagany i powinien zawierać znaki, które zawiera alfabet. Jeśli wystepują w nim znaki, których nie zawiera alfabet, są one pomijane.
+            </v-stepper-content>
+
+            <v-stepper-step step="2" :complete="e6 > 2" editable edit-icon="$complete">
+              Alfabet
+            </v-stepper-step>
+
+            <v-stepper-content step="2">
+              Aflabet jest wymagany. Musi on zawierać unikatowe znaki, które składają się na macierz N x N. Dla każego znaku przypisywana jest jego pozycja w macierzy.
+            </v-stepper-content>
+
+            <v-stepper-step step="3" :complete="e6 > 3" editable edit-icon="$complete">
+              Klucz
+            </v-stepper-step>
+
+            <v-stepper-content step="3">
+              Klucz jest wymagany. Musi składać się ze znaków występujących w alfabecie. Do każdego znaku klucza przypisywana jest pozycja z alfabetu.
+            </v-stepper-content>
+
+            <v-stepper-step step="4" :complete="e6 > 4" editable edit-icon="$complete">
+              Szyfrowanie
+            </v-stepper-step>
+
+            <v-stepper-content step="4">
+              <p>Każdy znak tekstu jawnego jest przepisywany do tabeli, która zawiera tyle samo kolumn ile znaków zawiera klucz. Każdy przepisany znak z tekstu jawnego otrzymuje wartość wyliczana na podstawie sumy pozycji znaku w alfabecie i pozycji znaku klucza w danej kolumnie.</p>
+              <p>Jeżeli wartość jest większa od 100, od wartości jest odejmowana liczba 100.</p>
+              <p>Dla macierzy większych niż 5x5 zastosowano kodowanie 3 cyfrowe, co jest rozszerzeniem metody szyfrowania Nihilistów.</p>
+            </v-stepper-content>
+          </v-stepper>
+        </v-card>
+      </v-dialog>
     </v-app-bar>
 
     <v-main>
@@ -23,7 +82,7 @@
             <v-col cols="12" md="6" lg="3">
               <base-card title="Input data" icon="text-subject">
                 <template v-slot:actions>
-                  <v-btn text color="error" @click="clearText">
+                  <v-btn text color="error" @click="clearInput">
                     <v-icon left v-text="'mdi-delete-outline'"/> Clear
                   </v-btn>
                 </template>
@@ -145,6 +204,8 @@ export default {
   },
   data() {
     return {
+      e6: 1,
+      helpDialog: false,
       encrypt: true,
       alphabetCreatorMenu: false,
       alphabetMatrixSize: 5,
@@ -276,8 +337,9 @@ export default {
     deleteFile() {
       this.textFile = null;
     },
-    clearText() {
+    clearInput() {
       this.text = '';
+      this.textFile = null;
     },
     clearSecrets() {
       this.alphabet = this.alphabet.map(() => '');
