@@ -261,12 +261,17 @@ export default {
       return Math.floor(index / this.alphabetMatrixSize + 1) * 10 + (index % this.alphabetMatrixSize) + 1;
     },
     shuffleAlphabet() {
-      const array = [...this.alphabet];
+      let array = [...this.alphabet];
+
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
       }
-      this.alphabet = array;
+
+      array = array.filter((letter) => letter !== '');
+      const newEmptyEntries = Array.from({ length: this.alphabet.length - array.length }, () => '');
+
+      this.alphabet = [...array, ...newEmptyEntries];
     },
     deleteFile() {
       this.textFile = null;
