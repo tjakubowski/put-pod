@@ -198,7 +198,9 @@ export default {
       }));
     },
     inputCleared() {
-      return [...this.text].filter(letter => this.alphabet.includes(letter));
+      return this.encrypt
+        ? [...this.text].filter((letter) => this.alphabet.includes(letter))
+        : this.text.replaceAll(' ', '');
     },
     inputMapped() {
       if (!this.isFormValid) return [];
@@ -219,7 +221,7 @@ export default {
           };
         });
       } else {
-        input = Array.from({ length: Math.ceil(this.inputCleared.length / codeLength) }, (v, i) => this.inputCleared.slice(i * codeLength, i * codeLength + codeLength))
+        input = this.inputCleared.match(new RegExp(`.{1,${codeLength}}`, 'g'))
           .map((code, index) => {
             let alphabetPosition = +code - this.getLetterCode(this.encryptionKey[index % encryptionKeyLength]);
             if (alphabetPosition < 0 && this.alphabetMatrixSize <= 5) alphabetPosition += 100;
