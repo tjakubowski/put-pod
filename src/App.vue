@@ -27,7 +27,7 @@
                     <v-icon left v-text="'mdi-delete-outline'"/> Clear
                   </v-btn>
                 </template>
-                <v-textarea v-model="text" @input="deleteFile" :label="encrypt ? 'Plaintext' : 'Encoded text'" filled dense :rules="textRules"/>
+                <v-textarea v-model="text" @input="deleteFile" :label="inputLabel" filled dense :rules="textRules"/>
                 <v-file-input @change="readFile" v-model="textFile" label="Plaintext file" filled dense/>
               </base-card>
             </v-col>
@@ -151,6 +151,7 @@ export default {
       textFile: null,
       text: '',
       textRules: [
+        (v) => !!v || `${this.inputLabel} is required`,
         (v) => !this.encrypt || [...v].every((letter) => this.alphabet.includes(letter)) || 'Some characters in the text are not in the alphabet and will be omitted',
       ],
       alphabet: [],
@@ -175,6 +176,9 @@ export default {
     },
   },
   computed: {
+    inputLabel() {
+      return this.encrypt ? 'Plaintext' : 'Encoded text';
+    },
     isAlphabetValid() {
       return this.alphabet.every((l) => l.length > 0);
     },
