@@ -295,6 +295,8 @@ export default {
       fileDownload(this.result, `${this.encrypt ? 'encryption' : 'decryption'}-result.txt`);
     },
     readFile(file) {
+      if (!file) return;
+
       const reader = new FileReader();
       reader.onload = ({ target }) => {
         this.text = target.result;
