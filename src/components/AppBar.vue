@@ -1,6 +1,13 @@
 <template>
   <v-app-bar app flat color="white">
-    <v-toolbar-title>Nihilist substitution</v-toolbar-title>
+    <v-btn
+      v-if="$route.name !== 'home'"
+      to="/"
+      icon
+    >
+      <v-icon>mdi-arrow-left</v-icon>
+    </v-btn>
+    <v-toolbar-title>{{ $route.meta.title }}</v-toolbar-title>
     <v-spacer/>
     <v-dialog
       v-model="helpDialog"
@@ -27,10 +34,11 @@
 </template>
 
 <script>
-import HelpPanels from "@/components/HelpPanels";
+import HelpPanels from '@/components/HelpPanels';
+
 export default {
   name: 'AppBar',
-  components: {HelpPanels},
+  components: { HelpPanels },
   data() {
     return {
       helpDialog: false,

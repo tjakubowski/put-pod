@@ -26,12 +26,12 @@ export default {
         {
           title: 'Nihilist substitution',
           description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque, tempora?',
-          to: 'nihilist-substitution',
+          to: '/nihilist-substitution',
         },
         {
           title: 'Shrinking generator',
           description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque, tempora?',
-          to: 'shrinking-generator',
+          to: '/shrinking-generator',
         },
       ],
     };
