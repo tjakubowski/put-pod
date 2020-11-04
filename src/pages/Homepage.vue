@@ -1,8 +1,8 @@
 <template>
     <v-row>
-      <v-col cols="12" sm="6" offset-sm="3">
+      <v-col cols="12" md="6" offset-md="3">
         <v-row>
-          <v-col cols="12" md="6" v-for="page in pages" :key="page.title">
+          <v-col cols="12" sm="6" v-for="page in pages" :key="page.title">
             <v-card>
               <v-card-title>{{ page.title }}</v-card-title>
               <v-card-text>{{ page.description }}</v-card-text>
