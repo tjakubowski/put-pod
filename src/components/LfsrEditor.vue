@@ -5,6 +5,7 @@
       counter
       outlined
       type="number"
+      :rules="stateRules"
       :label="stateLabel"
       v-model="state"
     />
@@ -45,6 +46,9 @@ export default {
           return v.every((char) => +char <= maxPolynomial)
           || `Max polynomial degree is ${maxPolynomial}`;
         },
+      ],
+      stateRules: [
+        (v) => [...v].every((char) => [0, 1].includes(+char)) || 'State must be a binary string',
       ],
     };
   },
