@@ -2,11 +2,19 @@
   <v-row>
     <v-col cols="12" md="6" lg="3">
       <base-card title="Input data" icon="text-subject">
-        <v-text-field dense filled hide-details clearable type="number" label="Bits to generate" v-model="generatedDigitsTarget" />
+        <v-text-field class="mt-3"
+                      dense
+                      outlined
+                      clearable
+                      type="number"
+                      label="Bits to generate"
+                      :rules="generatedDigitsRules"
+                      v-model.number="generatedDigitsTarget"
+        />
         <v-divider/>
-        <lfsr-editor :lfsr="lfsr1" name="LFSR-1"/>
+        <lfsr-editor class="mt-3" :lfsr="lfsr1.register" name="LFSR-1"/>
         <v-divider/>
-        <lfsr-editor :lfsr="lfsr2" name="LFSR-2"/>
+        <lfsr-editor class="mt-3" :lfsr="lfsr2.register" name="LFSR-2"/>
       </base-card>
     </v-col>
     <v-col cols="12" md="6" lg="3">
