@@ -16,7 +16,7 @@ export default class LFSR {
     if (newState.some((digit) => ![0, 1].includes(digit))) return;
 
     this.#initialState = newState;
-    this.#state = newState;
+    this.#state = [...newState];
   }
 
   get initialState() {
