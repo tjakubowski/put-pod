@@ -2,6 +2,7 @@
   <v-form ref="form">
     <v-text-field
       clearable
+      dense
       counter
       outlined
       type="number"
@@ -11,6 +12,7 @@
     />
     <v-combobox
       multiple
+      dense
       counter
       outlined
       small-chips
@@ -48,6 +50,7 @@ export default {
         },
       ],
       stateRules: [
+        (v) => v.length > 0 || 'State cannot be empty',
         (v) => [...v].every((char) => [0, 1].includes(+char)) || 'State must be a binary string',
       ],
     };
