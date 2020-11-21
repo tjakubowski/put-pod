@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import BaseCard from '@/components/BaseCard';
+import BaseCard from '@/components/base/BaseCard';
 import LFSR from '@/components/algorithms/lfsr';
 import fileDownload from 'js-file-download';
 import LfsrEditor from "@/components/LfsrEditor";

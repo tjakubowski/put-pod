@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import BaseError from '@/components/BaseError';
+import BaseError from '@/components/base/BaseError';
 
 export default {
   name: 'AlphabetTable',

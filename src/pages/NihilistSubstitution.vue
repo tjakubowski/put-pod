@@ -117,7 +117,7 @@
 </template>
 
 <script>
-import BaseCard from '@/components/BaseCard';
+import BaseCard from '@/components/base/BaseCard';
 import AlphabetTable from '@/components/AlphabetTable';
 import EncryptionTable from '@/components/EncryptionTable';
 import AlphabetCreator from '@/components/AlphabetCreator';
