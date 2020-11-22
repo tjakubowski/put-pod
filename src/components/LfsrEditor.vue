@@ -26,13 +26,11 @@
 </template>
 
 <script>
-import LFSR from '@/components/algorithms/lfsr';
-
 export default {
   name: 'LfsrEditor',
   props: {
     lfsr: {
-      type: LFSR,
+      type: Object,
       required: true,
     },
     name: {
@@ -44,7 +42,7 @@ export default {
     return {
       polynomialRules: [
         (v) => {
-          const maxPolynomial = this.lfsr.getMaxPolynomial();
+          const maxPolynomial = this.lfsr.register.getMaxPolynomial();
           return v.every((char) => +char <= maxPolynomial)
           || `Max polynomial degree is ${maxPolynomial}`;
         },
@@ -58,11 +56,11 @@ export default {
   computed: {
     state: {
       set(value) {
-        this.lfsr.initialState = value;
+        this.lfsr.register.initialState = value;
         this.$refs.form.validate();
       },
       get() {
-        return this.lfsr.state.join('');
+        return this.lfsr.register.state.join('');
       },
     },
     polynomial: {

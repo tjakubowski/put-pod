@@ -54,9 +54,9 @@ export default class LFSR {
 
       return previousBit ^ nextBit;
     });
-    const output = this.state.pop();
+    const output = this.#state.pop();
 
-    this.state.unshift(input);
+    this.#state.unshift(input);
     return output;
   }
 
