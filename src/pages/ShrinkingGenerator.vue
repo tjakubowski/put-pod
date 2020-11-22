@@ -1,5 +1,9 @@
 <template>
   <v-row>
+    <portal to="app-info">
+      <info-panels :panels="panels"/>
+    </portal>
+
     <v-col cols="12" md="6" lg="3">
       <base-card title="Input data" icon="text-subject">
         <v-text-field class="mt-3"
@@ -69,12 +73,31 @@ import LFSR from '@/components/algorithms/lfsr';
 import fileDownload from 'js-file-download';
 import LfsrEditor from '@/components/LfsrEditor';
 import LfsrViewer from '@/components/LfsrViewer';
+import InfoPanels from '@/components/InfoPanels';
 
 export default {
   name: 'ShrinkingGenerator',
-  components: { LfsrViewer, LfsrEditor, BaseCard },
+  components: {
+    InfoPanels, LfsrViewer, LfsrEditor, BaseCard,
+  },
   data() {
     return {
+      panels: [
+        {
+          header: 'LFSR',
+          content: [
+            'LFSR (Linear Feedback Shift Register) - rejestr przesuwający, którego bit wejściowy jest funkcją liniową jego poprzedniego stanu.',
+            'Do zapisu funkcji bitu wejściowego używamy wielomian, którego najwyższy stopień równy jest N-1, gdzie N to długość rejestru.',
+          ],
+        },
+        {
+          header: 'Generator obcinający',
+          content: [
+            'Generator ten składa się z dwóch rejestrów LFSR. Wyjście rejestru LFSR-A jest nazywane wyjściem danych, a wyjście rejestru LFSR-S warunkuje czy wyjście LFSR-A zostanie zapisane do wyniku działania generatora.',
+            'Jeżeli wyjście rejestru LFSR-S jest równe 1, do wyjścia generatora jest zapisywany bit wyjściowy rejestru LFSR-A. W przeciwnym wypadku, wartości wyjściowe obu rejestrów są pomijane i generator jest taktowany ponownie.',
+          ],
+        },
+      ],
       lfsr: {
         a: {
           state: [],
