@@ -1,5 +1,8 @@
 <template>
   <div>
+    <portal to="app-info">
+      <help-panels/>
+    </portal>
     <v-row>
       <v-col class="text-right">
         <v-btn outlined text @click="reverse">
@@ -117,6 +120,7 @@
 </template>
 
 <script>
+import HelpPanels from "@/components/HelpPanels";
 import BaseCard from '@/components/base/BaseCard';
 import AlphabetTable from '@/components/AlphabetTable';
 import EncryptionTable from '@/components/EncryptionTable';
@@ -126,6 +130,7 @@ import fileDownload from 'js-file-download';
 export default {
   name: 'NihilistSubstitution',
   components: {
+    HelpPanels,
     AlphabetCreator,
     EncryptionTable,
     AlphabetTable,
