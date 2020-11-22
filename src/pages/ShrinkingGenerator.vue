@@ -10,11 +10,12 @@
                       label="Bits to generate"
                       :rules="generatedDigitsRules"
                       v-model.number="generatedDigitsTarget"
+                      @input="reset"
         />
         <v-divider/>
-        <lfsr-editor class="mt-3" :lfsr="lfsrA" name="LFSR-A"/>
+        <lfsr-editor class="mt-3" :lfsr="lfsr.a" name="LFSR-A" @input="reset"/>
         <v-divider/>
-        <lfsr-editor class="mt-3" :lfsr="lfsrS" name="LFSR-S"/>
+        <lfsr-editor class="mt-3" :lfsr="lfsr.s" name="LFSR-S" @input="reset"/>
       </base-card>
     </v-col>
     <v-col cols="12" md="6" lg="3">
