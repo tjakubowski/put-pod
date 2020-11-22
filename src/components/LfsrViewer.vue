@@ -60,7 +60,8 @@ export default {
 
   &__item {
     display: inline-block;
-    padding: 0 4px;
+    padding: 0 3px;
+    margin: 0 1px;
 
     &--polynomial {
       position: relative;
