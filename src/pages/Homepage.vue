@@ -24,13 +24,13 @@ export default {
     return {
       pages: [
         {
-          title: 'Nihilist substitution',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque, tempora?',
+          title: 'Nihilist substitution cipher',
+          description: 'An easy-to-use tool for encrypting and decrypting texts using nihilist ciphers.',
           to: '/nihilist-substitution',
         },
         {
           title: 'Shrinking generator',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque, tempora?',
+          description: 'Shrinking generator is a form of pseudorandom number generator intended to be used in a stream cipher.',
           to: '/shrinking-generator',
         },
       ],
