@@ -2,12 +2,12 @@
   <div class="shrinking-generator-visualizer">
     <ul class="lfsr-list">
       <li v-for="(item, index) in stateA">
-        <span :class="{ 'text-bold':  polynomialA.includes(index) }">{{item}}</span>
+        <span :class="{ 'font-weight-bold':  polynomialA.includes(index) }">{{item}}</span>
       </li>
     </ul>
     <ul class="lfsr-list">
       <li v-for="(item, index) in stateS">
-        <span :class="{ 'text-bold': polynomialS.includes(index) }">{{item}}</span>
+        <span :class="{ 'font-weight-bold': polynomialS.includes(index) }">{{item}}</span>
       </li>
     </ul>
   </div>
@@ -49,10 +49,6 @@ export default {
 
   li {
     display: inline-block;
-  }
-
-  .text-bold {
-    font-weight: bold;
   }
 }
 </style>
