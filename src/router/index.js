@@ -3,11 +3,13 @@ import VueRouter from 'vue-router';
 import NihilistSubstitution from '@/pages/NihilistSubstitution.vue';
 import Homepage from '@/pages/Homepage.vue';
 import ShrinkingGenerator from '@/pages/ShrinkingGenerator.vue';
+import { publicPath } from '../../vue.config';
 
 Vue.use(VueRouter);
 
 const router = new VueRouter({
   mode: 'history',
+  base: publicPath,
   routes: [
     {
       path: '/',
