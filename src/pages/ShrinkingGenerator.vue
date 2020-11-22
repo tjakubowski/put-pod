@@ -55,8 +55,8 @@
             <v-icon left v-text="'mdi-download'"/> Download
           </v-btn>
         </template>
-        <LfsrViewer :lfsrA="lfsr.a" :lfsrS="lfsr.s"/>
-        <v-textarea readonly outlined dense hide-details height="200" label="Generated bits" class="mb-3" :value="result"/>
+        <LfsrViewer :lfsrs="lfsr"/>
+        <v-textarea readonly counter outlined dense height="200" label="Generated bits" class="mb-3" :value="result"/>
         <v-textarea readonly outlined dense hide-details height="100" label="Decimal result" :value="resultDecimal"/>
       </base-card>
     </v-col>
@@ -90,7 +90,6 @@ export default {
       clockInterval: 100,
       clock: null,
       generatedDigitsTarget: 20000,
-      generatedDigits: 0,
       generatedDigitsRules: [
         (v) => !!v || 'Bits to generate must be a number greater than 0',
       ],
@@ -105,7 +104,10 @@ export default {
       return this.generatedDigitsTarget === this.generatedDigits;
     },
     resultDecimal() {
-      return this.result.length > 0 ? BigInt(`0b${this.result}`) : '';
+      return this.generatedDigits > 0 ? BigInt(`0b${this.result}`) : '';
+    },
+    generatedDigits() {
+      return this.result.length;
     },
   },
   methods: {
@@ -132,7 +134,6 @@ export default {
       if (s === 0) return;
 
       this.result = a + this.result;
-      this.generatedDigits++;
     },
     run() {
       while (this.generatedDigits < this.generatedDigitsTarget) this.tick();
@@ -141,7 +142,6 @@ export default {
       this.stopClock();
 
       this.result = '';
-      this.generatedDigits = 0;
 
       this.lfsr.a.register.reset();
       this.lfsr.s.register.reset();

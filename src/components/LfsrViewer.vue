@@ -1,15 +1,29 @@
 <template>
-  <div class="shrinking-generator-visualizer">
-    <ul class="lfsr-list">
-      <li v-for="(item, index) in stateA">
-        <span :class="{ 'font-weight-bold':  polynomialA.includes(index) }">{{item}}</span>
-      </li>
-    </ul>
-    <ul class="lfsr-list">
-      <li v-for="(item, index) in stateS">
-        <span :class="{ 'font-weight-bold': polynomialS.includes(index) }">{{item}}</span>
-      </li>
-    </ul>
+  <div>
+
+    <div class="lfsr-list" v-for="(lfsr, name) in lfsrs" :key="name">
+      <div class="d-flex justify-center">
+        <v-slide-group
+          class="py-3"
+          show-arrows
+        >
+          <v-slide-item
+            v-for="(item, index) in lfsr.state"
+            :key="index"
+          >
+          <span
+            :class="['lfsr-list__item', {'lfsr-list__item--polynomial': isPolynomial(lfsr.polynomial, index) }]">
+            {{item}}
+          </span>
+          </v-slide-item>
+        </v-slide-group>
+      </div>
+
+      <div class="d-flex justify-center">
+        {{ polynomialString(lfsr) }} = {{ nextDigit(lfsr) }}
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -17,27 +31,24 @@
 export default {
   name: 'LfsrViewer',
   props: {
-    lfsrA: {
-      type: Object,
-      required: true,
-    },
-    lfsrS: {
+    lfsrs: {
       type: Object,
       required: true,
     },
   },
-  computed: {
-    stateA() {
-      return this.lfsrA.state;
+  methods: {
+    isPolynomial(polynomial, index) {
+      return polynomial.includes(index);
     },
-    stateS() {
-      return this.lfsrS.state;
+    nextDigit(lfsr) {
+      return lfsr.polynomial.reduce((prev, current) => {
+        const maxStateIndex = lfsr.state.length - 1;
+        return lfsr.state[maxStateIndex - prev] ^ lfsr.state[maxStateIndex - current];
+      });
     },
-    polynomialA() {
-      return this.lfsrA.polynomial;
-    },
-    polynomialS() {
-      return this.lfsrS.polynomial;
+    polynomialString(lfsr) {
+      const sortedPolynomial = [...lfsr.polynomial].sort((a, b) => a - b);
+      return sortedPolynomial.map((index) => lfsr.state[index]).join(' ^ ');
     },
   },
 };
@@ -45,10 +56,16 @@ export default {
 
 <style lang="scss">
 .lfsr-list {
-  list-style-type: none;
+  padding: 8px 0 !important;
 
-  li {
+  &__item {
     display: inline-block;
+    padding: 0 4px;
+
+    &--polynomial {
+      position: relative;
+      background-color: #eaeaea;
+    }
   }
 }
 </style>
