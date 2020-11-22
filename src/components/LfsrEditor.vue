@@ -42,6 +42,7 @@ export default {
   data() {
     return {
       polynomialRules: [
+        (v) => v.length > 0 || 'Polynomial is required',
         (v) => {
           const maxPolynomial = this.register.getMaxPolynomial();
           return v.every((char) => +char <= maxPolynomial)
