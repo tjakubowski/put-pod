@@ -1,7 +1,7 @@
 <template>
   <v-app-bar app flat color="white">
     <v-btn
-      v-if="$route.name !== 'home'"
+      v-if="!isHomepage"
       to="/"
       icon
     >
@@ -11,6 +11,7 @@
     <v-spacer/>
     <v-dialog
       width="600px"
+      v-if="!isHomepage"
     >
       <template v-slot:activator="{ on, attrs }">
         <v-btn
@@ -36,5 +37,10 @@
 <script>
 export default {
   name: 'AppBar',
+  computed: {
+    isHomepage() {
+      return this.$route.name === 'home';
+    },
+  },
 };
 </script>
