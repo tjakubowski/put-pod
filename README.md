@@ -1,24 +1,8 @@
-# nihilist-substitution
+# Podstawy Ochrony Danych
 
-## Project setup
-```
-npm install
-```
+Aplikacja webowa napisana we Vue.js na potrzeby laboratorium przedmiotu Podstawy Ochrony Danych na Politechnice Poznańskiej.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+Funkcje:
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+- szyfr nihilistów
+- generator obcinający
