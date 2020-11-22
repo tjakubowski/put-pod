@@ -9,6 +9,10 @@
     </v-btn>
     <v-toolbar-title>{{ $route.meta.title }}</v-toolbar-title>
     <v-spacer/>
+    <v-btn text :href="sourceLink">
+      <v-icon left>mdi-github</v-icon>
+      Source
+    </v-btn>
     <v-dialog
       width="600px"
       v-if="!isHomepage"
@@ -37,6 +41,11 @@
 <script>
 export default {
   name: 'AppBar',
+  data() {
+    return {
+      sourceLink: 'https://github.com/tjakubowski/put-pod',
+    };
+  },
   computed: {
     isHomepage() {
       return this.$route.name === 'home';
