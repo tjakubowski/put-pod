@@ -55,7 +55,7 @@
             <v-icon left v-text="'mdi-download'"/> Download
           </v-btn>
         </template>
-        <LfsrViewer :lfsrA="lfsrA" :lfsrS="lfsrS"/>
+        <LfsrViewer :lfsrA="lfsr.a" :lfsrS="lfsr.s"/>
         <v-textarea readonly outlined dense hide-details height="200" label="Generated bits" class="mb-3" :value="result"/>
         <v-textarea readonly outlined dense hide-details height="100" label="Decimal result" :value="resultDecimal"/>
       </base-card>
@@ -75,15 +75,17 @@ export default {
   components: { LfsrViewer, LfsrEditor, BaseCard },
   data() {
     return {
-      lfsrA: {
-        state: [],
-        initialState: '100001010010110111010111010',
-        polynomial: [0, 1, 5, 8],
-      },
-      lfsrS: {
-        state: [],
-        initialState: '10101000010010001001111010010010010001',
-        polynomial: [4, 1, 6, 9, 11, 17, 14],
+      lfsr: {
+        a: {
+          state: [],
+          initialState: '100001010010110111010111010',
+          polynomial: [0, 1, 5, 8],
+        },
+        s: {
+          state: [],
+          initialState: '10101000010010001001111010010010010001',
+          polynomial: [4, 1, 6, 9, 11, 17, 14],
+        },
       },
       clockInterval: 100,
       clock: null,
@@ -123,8 +125,8 @@ export default {
       }
     },
     tick() {
-      const a = this.lfsrA.register.next();
-      const s = this.lfsrS.register.next();
+      const a = this.lfsr.a.register.next();
+      const s = this.lfsr.s.register.next();
 
       this.mapLfsrs();
       if (s === 0) return;
@@ -141,24 +143,24 @@ export default {
       this.result = '';
       this.generatedDigits = 0;
 
-      this.lfsrA.register.reset();
-      this.lfsrS.register.reset();
+      this.lfsr.a.register.reset();
+      this.lfsr.s.register.reset();
 
       this.mapLfsrs();
     },
     mapLfsrs() {
       const properties = ['state', 'polynomial'];
 
-      properties.forEach((property) => { this.lfsrA[property] = this.lfsrA.register[property]; });
-      properties.forEach((property) => { this.lfsrS[property] = this.lfsrS.register[property]; });
+      properties.forEach((property) => { this.lfsr.a[property] = this.lfsr.a.register[property]; });
+      properties.forEach((property) => { this.lfsr.s[property] = this.lfsr.s.register[property]; });
     },
     downloadResult() {
       if (this.isDone) fileDownload(this.result, 'shrinking-generator-result.txt');
     },
   },
   created() {
-    this.lfsrA.register = new LFSR(this.lfsrA.initialState, this.lfsrA.polynomial);
-    this.lfsrS.register = new LFSR(this.lfsrS.initialState, this.lfsrS.polynomial);
+    this.lfsr.a.register = new LFSR(this.lfsr.a.initialState, this.lfsr.a.polynomial);
+    this.lfsr.s.register = new LFSR(this.lfsr.s.initialState, this.lfsr.s.polynomial);
     this.mapLfsrs();
   },
 };
