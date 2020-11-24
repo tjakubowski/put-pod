@@ -22,7 +22,7 @@
               </v-btn>
             </template>
             <v-textarea v-model="text" @input="deleteFile" :label="inputLabel" filled dense :rules="textRules"/>
-            <v-file-input @change="readFile" v-model="textFile" label="Plaintext file" filled dense/>
+            <v-file-input @change="importFile" v-model="textFile" label="Plaintext file" filled dense/>
           </base-card>
         </v-col>
 
@@ -288,7 +288,7 @@ export default {
     downloadResult() {
       downloadFile(this.result, `${this.encrypt ? 'encryption' : 'decryption'}-result.txt`);
     },
-    readFile(file) {
+    importFile(file) {
       readFile(file, (result) => { this.text = result; });
     },
   },
