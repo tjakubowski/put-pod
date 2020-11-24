@@ -125,6 +125,7 @@ import BaseCard from '@/components/base/BaseCard';
 import AlphabetTable from '@/components/AlphabetTable';
 import EncryptionTable from '@/components/EncryptionTable';
 import AlphabetCreator from '@/components/AlphabetCreator';
+import { nihilistSubstitutionPanels as panels } from '@/components/data/panels';
 import fileDownload from 'js-file-download';
 
 export default {
@@ -138,28 +139,7 @@ export default {
   },
   data() {
     return {
-      panels: [
-        {
-          header: 'Klucz jawny',
-          content: ['Tekst jawny jest wymagany i powinien zawierać znaki, które zawiera alfabet. Jeśli wystepują w nim znaki, których nie zawiera alfabet, są one pomijane.'],
-        },
-        {
-          header: 'Alfabet',
-          content: ['Aflabet jest wymagany. Musi on zawierać unikatowe znaki, które składają się na macierz N x N. Dla każego znaku przypisywana jest jego pozycja w macierzy.'],
-        },
-        {
-          header: 'Klucz',
-          content: ['Klucz jest wymagany. Musi składać się ze znaków występujących w alfabecie. Do każdego znaku klucza przypisywana jest pozycja z alfabetu.'],
-        },
-        {
-          header: 'Szyfrowanie',
-          content: [
-            'Każdy znak tekstu jawnego jest przepisywany do tabeli, która zawiera tyle samo kolumn ile znaków zawiera klucz. Każdy przepisany znak z tekstu jawnego otrzymuje wartość wyliczana na podstawie sumy pozycji znaku w alfabecie i pozycji znaku klucza w danej kolumnie.',
-            'Jeżeli wartość jest większa od 100, od wartości jest odejmowana liczba 100.',
-            'Dla macierzy większych niż 5x5 zastosowano kodowanie 3 cyfrowe, co jest rozszerzeniem metody szyfrowania Nihilistów.',
-          ],
-        },
-      ],
+      panels,
       encrypt: true,
       alphabetCreatorMenu: false,
       alphabetMatrixSize: 5,
