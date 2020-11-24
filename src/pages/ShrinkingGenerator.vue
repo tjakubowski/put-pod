@@ -6,20 +6,27 @@
 
     <v-col cols="12" md="6" lg="3">
       <base-card title="Input data" icon="text-subject">
-        <v-text-field class="mt-3"
-                      dense
-                      outlined
-                      clearable
-                      type="number"
-                      label="Bits to generate"
-                      :rules="generatedDigitsRules"
-                      v-model.number="generatedDigitsTarget"
-                      @input="reset"
-        />
-        <v-divider/>
-        <lfsr-editor class="mt-3" :lfsr="lfsr.a" name="LFSR-A" @input="reset"/>
-        <v-divider/>
-        <lfsr-editor class="mt-3" :lfsr="lfsr.s" name="LFSR-S" @input="reset"/>
+        <template #actions>
+          <file-btn text color="primary" @input="importInputData">
+            <v-icon left v-text="'mdi-import'"/> Import
+          </file-btn>
+          <v-btn text color="primary" @click="downloadInputData" :disabled="!isInputDataValid">
+            <v-icon left v-text="'mdi-download'"/> Download
+          </v-btn>
+        </template>
+        <v-form ref="inputForm" v-model="isInputDataValid">
+          <v-text-field class="mt-3" dense outlined clearable
+                        type="number"
+                        label="Bits to generate"
+                        :rules="generatedDigitsRules"
+                        v-model.number="generatedDigitsTarget"
+                        @input="validate"
+          />
+          <v-divider/>
+          <lfsr-editor class="mt-3" :lfsr="lfsr.a" name="LFSR-A" @input="reset"/>
+          <v-divider/>
+          <lfsr-editor class="mt-3" :lfsr="lfsr.s" name="LFSR-S" @input="reset"/>
+        </v-form>
       </base-card>
     </v-col>
     <v-col cols="12" md="6" lg="3">
@@ -72,14 +79,16 @@ import BaseCard from '@/components/base/BaseCard';
 import LfsrEditor from '@/components/LfsrEditor';
 import LfsrViewer from '@/components/LfsrViewer';
 import InfoPanels from '@/components/InfoPanels';
+import FileBtn from '@/components/FileBtn';
 import { shrinkingGeneratorPanels as panels } from '@/components/data/panels';
 import LFSR from '@/components/algorithms/lfsr';
 import downloadFile from 'js-file-download';
+import readFile from '@/components/utils/file';
 
 export default {
   name: 'ShrinkingGenerator',
   components: {
-    InfoPanels, LfsrViewer, LfsrEditor, BaseCard,
+    FileBtn, InfoPanels, LfsrViewer, LfsrEditor, BaseCard,
   },
   data() {
     return {
@@ -96,6 +105,7 @@ export default {
           polynomial: [4, 1, 6, 9, 11, 17, 14],
         },
       },
+      isInputDataValid: false,
       clockInterval: 100,
       clock: null,
       generatedDigitsTarget: 20000,
@@ -156,15 +166,54 @@ export default {
       this.lfsr.s.register.reset();
 
       this.mapLfsrs();
+      this.validate();
+    },
+    validate() {
+      this.$refs.inputForm.validate();
     },
     mapLfsrs() {
-      const properties = ['state', 'polynomial'];
+      const properties = ['state', 'initialState', 'polynomial'];
 
       properties.forEach((property) => { this.lfsr.a[property] = this.lfsr.a.register[property]; });
       properties.forEach((property) => { this.lfsr.s[property] = this.lfsr.s.register[property]; });
     },
     downloadResult() {
       if (this.isDone) downloadFile(this.result, 'shrinking-generator-result.txt');
+    },
+    downloadInputData() {
+      const data = {
+        bits: this.generatedDigitsTarget,
+        lfsr: {
+          a: {
+            state: this.lfsr.a.register.initialState,
+            polynomial: this.lfsr.a.register.polynomial,
+          },
+          s: {
+            state: this.lfsr.s.register.initialState,
+            polynomial: this.lfsr.s.register.polynomial,
+          },
+        },
+      };
+
+      downloadFile(JSON.stringify(data), 'shrinking-generator-input.txt');
+    },
+    importInputData(file) {
+      readFile(file, (result) => {
+        const data = JSON.parse(result);
+
+        this.generatedDigitsTarget = data.bits;
+
+        const lfsrA = this.lfsr.a.register;
+        const lfsrS = this.lfsr.s.register;
+
+        lfsrA.initialState = data.lfsr.a.state;
+        lfsrA.polynomial = data.lfsr.a.polynomial;
+
+        lfsrS.initialState = data.lfsr.s.state;
+        lfsrS.polynomial = data.lfsr.s.polynomial;
+
+        this.reset();
+      });
     },
   },
   created() {
