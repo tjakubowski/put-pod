@@ -120,13 +120,14 @@
 </template>
 
 <script>
-import InfoPanels from "@/components/InfoPanels";
+import InfoPanels from '@/components/InfoPanels';
 import BaseCard from '@/components/base/BaseCard';
 import AlphabetTable from '@/components/AlphabetTable';
 import EncryptionTable from '@/components/EncryptionTable';
 import AlphabetCreator from '@/components/AlphabetCreator';
 import { nihilistSubstitutionPanels as panels } from '@/components/data/panels';
-import fileDownload from 'js-file-download';
+import downloadFile from 'js-file-download';
+import readFile from '@/components/utils/file';
 
 export default {
   name: 'NihilistSubstitution',
@@ -285,16 +286,10 @@ export default {
       this.encrypt = !this.encrypt;
     },
     downloadResult() {
-      fileDownload(this.result, `${this.encrypt ? 'encryption' : 'decryption'}-result.txt`);
+      downloadFile(this.result, `${this.encrypt ? 'encryption' : 'decryption'}-result.txt`);
     },
     readFile(file) {
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = ({ target }) => {
-        this.text = target.result;
-      };
-      reader.readAsText(file);
+      readFile(file, (result) => { this.text = result; });
     },
   },
   created() {
