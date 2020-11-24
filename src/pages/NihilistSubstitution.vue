@@ -21,8 +21,10 @@
                 <v-icon left v-text="'mdi-delete-outline'"/> Clear
               </v-btn>
             </template>
-            <v-textarea v-model="text" @input="deleteFile" :label="inputLabel" filled dense :rules="textRules"/>
-            <v-file-input @change="importFile" v-model="textFile" label="Plaintext file" filled dense/>
+            <v-textarea v-model="text" :label="inputLabel" filled dense :rules="textRules"/>
+            <file-btn text block color="primary" @input="importFile">
+              <v-icon left v-text="'mdi-import'"/>Import data
+            </file-btn>
           </base-card>
         </v-col>
 
@@ -128,10 +130,12 @@ import AlphabetCreator from '@/components/AlphabetCreator';
 import { nihilistSubstitutionPanels as panels } from '@/components/data/panels';
 import downloadFile from 'js-file-download';
 import readFile from '@/components/utils/file';
+import FileBtn from "@/components/FileBtn";
 
 export default {
   name: 'NihilistSubstitution',
   components: {
+    FileBtn,
     InfoPanels,
     AlphabetCreator,
     EncryptionTable,
@@ -144,7 +148,6 @@ export default {
       encrypt: true,
       alphabetCreatorMenu: false,
       alphabetMatrixSize: 5,
-      textFile: null,
       text: '',
       textRules: [
         (v) => !!v || `${this.inputLabel} is required`,
@@ -270,12 +273,8 @@ export default {
 
       this.alphabet = [...array, ...newEmptyEntries];
     },
-    deleteFile() {
-      this.textFile = null;
-    },
     clearInput() {
       this.text = '';
-      this.textFile = null;
     },
     clearSecrets() {
       this.alphabet = this.alphabet.map(() => '');
