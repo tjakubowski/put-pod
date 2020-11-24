@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form">
+  <div>
     <v-text-field
       clearable
       dense
@@ -9,7 +9,7 @@
       :rules="stateRules"
       :label="stateLabel"
       v-model="state"
-      @input="$emit('input')"
+      @input="onInput"
     />
     <v-combobox
       multiple
@@ -21,9 +21,9 @@
       :rules="polynomialRules"
       :label="polynomialLabel"
       v-model="polynomial"
-      @input="$emit('input')"
+      @input="onInput"
     />
-  </v-form>
+  </div>
 </template>
 
 <script>
@@ -62,10 +62,9 @@ export default {
     state: {
       set(value) {
         this.register.initialState = value;
-        this.$refs.form.validate();
       },
       get() {
-        return this.register.state.join('');
+        return this.lfsr.initialState.join('');
       },
     },
     polynomial: {
@@ -73,7 +72,7 @@ export default {
         this.register.polynomial = value;
       },
       get() {
-        return this.register.polynomial.map((digit) => `${digit}`);
+        return this.lfsr.polynomial.map((digit) => `${digit}`);
       },
     },
     stateLabel() {
@@ -81,6 +80,11 @@ export default {
     },
     polynomialLabel() {
       return `${this.name} polynomial`;
+    },
+  },
+  methods: {
+    onInput() {
+      this.$emit('input', { state: this.state, polynomial: this.polynomial });
     },
   },
 };
