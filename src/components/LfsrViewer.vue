@@ -41,10 +41,7 @@ export default {
       return polynomial.includes(index);
     },
     nextDigit(lfsr) {
-      return lfsr.polynomial.reduce((prev, current) => {
-        const maxStateIndex = lfsr.state.length - 1;
-        return lfsr.state[maxStateIndex - prev] ^ lfsr.state[maxStateIndex - current];
-      });
+      return lfsr.polynomial.reduce((prev, current) => lfsr.state[prev] ^ lfsr.state[current]);
     },
     polynomialString(lfsr) {
       const sortedPolynomial = [...lfsr.polynomial].sort((a, b) => a - b);

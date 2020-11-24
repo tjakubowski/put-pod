@@ -47,10 +47,9 @@ export default class LFSR {
 
   next = () => {
     const input = this.polynomial.reduce((previous, current) => {
-      const maxStateIndex = this.state.length - 1;
 
-      const previousBit = this.state[maxStateIndex - previous];
-      const nextBit = this.state[maxStateIndex - current];
+      const previousBit = this.state[previous];
+      const nextBit = this.state[current];
 
       return previousBit ^ nextBit;
     });
