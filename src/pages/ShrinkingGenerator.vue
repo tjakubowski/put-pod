@@ -74,7 +74,7 @@ import LfsrViewer from '@/components/LfsrViewer';
 import InfoPanels from '@/components/InfoPanels';
 import { shrinkingGeneratorPanels as panels } from '@/components/data/panels';
 import LFSR from '@/components/algorithms/lfsr';
-import fileDownload from 'js-file-download';
+import downloadFile from 'js-file-download';
 
 export default {
   name: 'ShrinkingGenerator',
@@ -164,7 +164,7 @@ export default {
       properties.forEach((property) => { this.lfsr.s[property] = this.lfsr.s.register[property]; });
     },
     downloadResult() {
-      if (this.isDone) fileDownload(this.result, 'shrinking-generator-result.txt');
+      if (this.isDone) downloadFile(this.result, 'shrinking-generator-result.txt');
     },
   },
   created() {
