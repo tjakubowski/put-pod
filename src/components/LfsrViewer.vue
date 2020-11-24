@@ -41,7 +41,7 @@ export default {
       return polynomial.includes(index);
     },
     nextDigit(lfsr) {
-      return lfsr.polynomial.reduce((prev, current) => lfsr.state[prev] ^ lfsr.state[current]);
+      return lfsr.register.next();
     },
     polynomialString(lfsr) {
       const sortedPolynomial = [...lfsr.polynomial].sort((a, b) => a - b);

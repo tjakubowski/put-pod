@@ -45,14 +45,15 @@ export default class LFSR {
 
   getMaxPolynomial = () => this.state.length - 1;
 
-  next = () => {
-    const input = this.polynomial.reduce((previous, current) => {
+  next = () => this.polynomial.reduce((previous, current) => {
+    const previousBit = this.state[previous];
+    const nextBit = this.state[current];
 
-      const previousBit = this.state[previous];
-      const nextBit = this.state[current];
+    return previousBit ^ nextBit;
+  })
 
-      return previousBit ^ nextBit;
-    });
+  tick = () => {
+    const input = this.next();
     const output = this.#state.pop();
 
     this.#state.unshift(input);

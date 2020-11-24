@@ -150,8 +150,8 @@ export default {
       }
     },
     tick() {
-      const a = this.lfsr.a.register.next();
-      const s = this.lfsr.s.register.next();
+      const a = this.lfsr.a.register.tick();
+      const s = this.lfsr.s.register.tick();
 
       this.mapLfsrs();
       if (s === 0) return;
