@@ -84,6 +84,7 @@ import { shrinkingGeneratorPanels as panels } from '@/components/data/panels';
 import LFSR from '@/components/algorithms/lfsr';
 import downloadFile from 'js-file-download';
 import readFile from '@/components/utils/file';
+import worker from '../workers';
 
 export default {
   name: 'ShrinkingGenerator',
@@ -155,6 +156,7 @@ export default {
       this.result = a + this.result;
     },
     run() {
+      worker.send([3, 5, 7, 1, 3, 8]);
       while (this.generatedDigits < this.generatedDigitsTarget) this.tick();
     },
     reset() {
@@ -220,6 +222,9 @@ export default {
     this.lfsr.a.register = new LFSR(this.lfsr.a.initialState, this.lfsr.a.polynomial);
     this.lfsr.s.register = new LFSR(this.lfsr.s.initialState, this.lfsr.s.polynomial);
     this.mapLfsrs();
+  },
+  mounted() {
+    worker.worker.onmessage = (event) => { console.log(event); };
   },
 };
 </script>
