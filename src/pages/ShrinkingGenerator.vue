@@ -152,24 +152,26 @@ export default {
 
       this.result = a + this.result;
     },
-    run() {
+    async run() {
       this.isGenerating = true;
-      if (!window.Worker) {
-        while (this.generatedDigits < this.generatedDigitsTarget) this.tick();
-        this.isGenerating = false;
-        return;
-      }
+
+      window.Worker ? await this.runAsync() : this.runSync();
+
+      this.isGenerating = false;
+    },
+    runSync() {
+      while (this.generatedDigits < this.generatedDigitsTarget) this.tick();
+    },
+    async runAsync() {
       const data = this.getInputDataObject();
-      let a = worker.send(data).then(({ result, lfsr }) => {
-        this.result = result;
-        this.lfsr.a.register.state = lfsr.a.state;
-        this.lfsr.s.register.state = lfsr.s.state;
 
-        this.mapLfsrs();
+      const { result, lfsr } = await worker.send(data);
 
-        this.isGenerating = false;
-      });
-      console.log(a);
+      this.result = result;
+      this.lfsr.a.register.state = lfsr.a.state;
+      this.lfsr.s.register.state = lfsr.s.state;
+
+      this.mapLfsrs();
     },
     reset() {
       this.stopClock();
