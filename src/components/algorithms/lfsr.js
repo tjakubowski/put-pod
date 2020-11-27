@@ -10,10 +10,10 @@ export default class LFSR {
     this.polynomial = polynomial;
   }
 
-  set initialState(value) {
-    const newState = [...value].map((char) => +char);
+  set initialState(state) {
+    const newState = this.normalizeState(state);
 
-    if (newState.some((digit) => ![0, 1].includes(digit))) return;
+    if (!this.isStateValid(newState)) return;
 
     this.#initialState = newState;
     this.#state = [...newState];
@@ -23,18 +23,22 @@ export default class LFSR {
     return this.#initialState;
   }
 
+  set state(state) {
+    const newState = this.normalizeState(state);
+
+    if (!this.isStateValid(state)) return;
+
+    this.#state = [...newState];
+  }
+
   get state() {
     return this.#state;
   }
 
-  set polynomial(value) {
-    const newPolynomial = [...new Set(value.map((char) => +char))];
-    const maxPolynomial = this.getMaxPolynomial();
+  set polynomial(polynomial) {
+    const newPolynomial = this.normalizePolynomial(polynomial);
 
-    if (
-      newPolynomial.length === 0
-      || newPolynomial.some((number) => number > maxPolynomial)
-    ) return;
+    if (!this.isPolynomialValid(newPolynomial)) return;
 
     this.#polynomial = newPolynomial;
   }
@@ -43,7 +47,18 @@ export default class LFSR {
     return this.#polynomial;
   }
 
-  getMaxPolynomial = () => this.state.length - 1;
+  isStateValid = (state) => [...state].every((digit) => [0, 1].includes(digit));
+
+  isPolynomialValid = (polynomial) => {
+    const maxPolynomial = this.getMaxPolynomial();
+    return polynomial.length > 0 && polynomial.every((number) => number <= maxPolynomial);
+  }
+
+  normalizeState = (state) => [...state].map((char) => +char);
+
+  normalizePolynomial = (polynomial) => [...new Set(polynomial.map((char) => +char))];
+
+  getMaxPolynomial = () => this.#state.length - 1;
 
   next = () => this.polynomial.reduce((previous, current) => {
     const previousBit = this.state[previous];
