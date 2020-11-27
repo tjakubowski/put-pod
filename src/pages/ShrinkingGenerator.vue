@@ -83,7 +83,7 @@ import { shrinkingGeneratorPanels as panels } from '@/components/data/panels';
 import LFSR from '@/components/algorithms/lfsr';
 import downloadFile from 'js-file-download';
 import readFile from '@/components/utils/file';
-import worker from '../workers';
+import worker from '@/workers/shrinking-generator-worker';
 
 export default {
   name: 'ShrinkingGenerator',
@@ -152,8 +152,18 @@ export default {
       this.result = a + this.result;
     },
     run() {
-      worker.send([3, 5, 7, 1, 3, 8]);
-      while (this.generatedDigits < this.generatedDigitsTarget) this.tick();
+      if (!window.Worker) {
+        while (this.generatedDigits < this.generatedDigitsTarget) this.tick();
+        return;
+      }
+      const data = this.getInputDataObject();
+      worker.send(data).then(({ result, lfsr }) => {
+        this.result = result;
+        this.lfsr.a.register.state = lfsr.a.state;
+        this.lfsr.s.register.state = lfsr.s.state;
+
+        this.mapLfsrs();
+      });
     },
     reset() {
       this.stopClock();
@@ -175,23 +185,26 @@ export default {
       properties.forEach((property) => { this.lfsr.a[property] = this.lfsr.a.register[property]; });
       properties.forEach((property) => { this.lfsr.s[property] = this.lfsr.s.register[property]; });
     },
-    downloadResult() {
-      if (this.isDone) downloadFile(this.result, 'shrinking-generator-result.txt');
-    },
-    downloadInputData() {
-      const data = {
+    getInputDataObject() {
+      return {
         bits: this.generatedDigitsTarget,
         lfsr: {
           a: {
-            state: this.lfsr.a.register.initialState,
+            initialState: this.lfsr.a.register.initialState,
             polynomial: this.lfsr.a.register.polynomial,
           },
           s: {
-            state: this.lfsr.s.register.initialState,
+            initialState: this.lfsr.s.register.initialState,
             polynomial: this.lfsr.s.register.polynomial,
           },
         },
       };
+    },
+    downloadResult() {
+      if (this.isDone) downloadFile(this.result, 'shrinking-generator-result.txt');
+    },
+    downloadInputData() {
+      const data = this.getInputDataObject();
 
       downloadFile(JSON.stringify(data), 'shrinking-generator-input.txt');
     },
@@ -204,10 +217,10 @@ export default {
         const lfsrA = this.lfsr.a.register;
         const lfsrS = this.lfsr.s.register;
 
-        lfsrA.initialState = data.lfsr.a.state;
+        lfsrA.initialState = data.lfsr.a.initialState;
         lfsrA.polynomial = data.lfsr.a.polynomial;
 
-        lfsrS.initialState = data.lfsr.s.state;
+        lfsrS.initialState = data.lfsr.s.initialState;
         lfsrS.polynomial = data.lfsr.s.polynomial;
 
         this.reset();
@@ -218,9 +231,6 @@ export default {
     this.lfsr.a.register = new LFSR(this.lfsr.a.initialState, this.lfsr.a.polynomial);
     this.lfsr.s.register = new LFSR(this.lfsr.s.initialState, this.lfsr.s.polynomial);
     this.mapLfsrs();
-  },
-  mounted() {
-    worker.worker.onmessage = (event) => { console.log(event); };
   },
 };
 </script>
