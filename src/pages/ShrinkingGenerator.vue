@@ -30,7 +30,7 @@
       </base-card>
     </v-col>
     <v-col cols="12" md="6" lg="3">
-      <base-card title="Clock control" icon="update">
+      <base-card title="Clock control" icon="update" :loading="isGenerating">
         <template #actions>
           <v-btn text color="error" @click="reset">
             <v-icon left v-text="'mdi-restart'"/> Reset
@@ -54,7 +54,7 @@
             <v-btn text @click="runClock" block outlined :disabled="isRunning || isDone">Start</v-btn>
           </v-col>
           <v-col>
-            <v-btn text @click="stopClock" block outlined :disabled="!isRunning || isDone">Stop</v-btn>
+            <v-btn text @click="stopClock" block outlined :disabled="isGenerating || !isRunning || isDone">Stop</v-btn>
           </v-col>
         </v-row>
       </base-card>
@@ -108,6 +108,7 @@ export default {
       isInputDataValid: false,
       clockInterval: 100,
       clock: null,
+      isGenerating: false,
       generatedDigitsTarget: 20000,
       generatedDigitsRules: [
         (v) => !!v || 'Bits to generate must be a number greater than 0',
@@ -117,7 +118,7 @@ export default {
   },
   computed: {
     isRunning() {
-      return !!this.clock;
+      return !!this.clock || this.isGenerating;
     },
     isDone() {
       return this.generatedDigitsTarget === this.generatedDigits;
@@ -152,18 +153,23 @@ export default {
       this.result = a + this.result;
     },
     run() {
+      this.isGenerating = true;
       if (!window.Worker) {
         while (this.generatedDigits < this.generatedDigitsTarget) this.tick();
+        this.isGenerating = false;
         return;
       }
       const data = this.getInputDataObject();
-      worker.send(data).then(({ result, lfsr }) => {
+      let a = worker.send(data).then(({ result, lfsr }) => {
         this.result = result;
         this.lfsr.a.register.state = lfsr.a.state;
         this.lfsr.s.register.state = lfsr.s.state;
 
         this.mapLfsrs();
+
+        this.isGenerating = false;
       });
+      console.log(a);
     },
     reset() {
       this.stopClock();

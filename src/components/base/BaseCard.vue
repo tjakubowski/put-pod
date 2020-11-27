@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card :loading="loading">
     <v-card-title class="heading">
       <v-icon v-if="icon" large class="mr-3" color="primary">mdi-{{icon}}</v-icon>
       {{title}}
@@ -24,6 +24,10 @@ export default {
     icon: {
       type: String,
       default: null,
+    },
+    loading: {
+      type: Boolean,
+      default: false,
     },
   },
 };
