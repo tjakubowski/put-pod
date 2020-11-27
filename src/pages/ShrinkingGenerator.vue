@@ -68,7 +68,6 @@
         </template>
         <LfsrViewer :lfsrs="lfsr"/>
         <v-textarea readonly counter outlined dense height="200" label="Generated bits" class="mb-3" :value="result"/>
-        <v-textarea readonly outlined dense hide-details height="100" label="Decimal result" :value="resultDecimal"/>
       </base-card>
     </v-col>
   </v-row>
@@ -122,9 +121,6 @@ export default {
     },
     isDone() {
       return this.generatedDigitsTarget === this.generatedDigits;
-    },
-    resultDecimal() {
-      return this.generatedDigits > 0 ? BigInt(`0b${this.result}`) : '';
     },
     generatedDigits() {
       return this.result.length;
