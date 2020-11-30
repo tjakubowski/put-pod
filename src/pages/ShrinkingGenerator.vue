@@ -68,6 +68,9 @@
         </template>
         <LfsrViewer :lfsrs="lfsr"/>
         <v-textarea readonly counter outlined dense height="200" label="Generated bits" class="mb-3" :value="result"/>
+        <v-btn text block color="primary" :disabled="!isDone" @click="useInStreamCipher">
+          <v-icon left v-text="`mdi-arrow-right`" /> Use in stream cipher
+        </v-btn>
       </base-card>
     </v-col>
   </v-row>
@@ -233,6 +236,9 @@ export default {
 
         this.reset();
       });
+    },
+    useInStreamCipher() {
+      this.$router.push({ name: 'stream-cipher', params: { bits: this.result } });
     },
   },
   created() {

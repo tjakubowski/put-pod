@@ -53,8 +53,8 @@
 <script>
 import downloadFile from 'js-file-download';
 import readFile from '@/components/utils/file';
-import { bitsToBytes, stringToBinary, isBinary, bytesToString } from '@/components/utils/binary';
-import { streamCipherPanels as panels } from '@/components/data/panels';
+import {bitsToBytes, bytesToString, isBinary, stringToBinary,} from '@/components/utils/binary';
+import {streamCipherPanels as panels} from '@/components/data/panels';
 import InfoPanels from '@/components/InfoPanels';
 import BaseCard from '@/components/base/BaseCard';
 import FileBtn from '@/components/FileBtn';
@@ -133,6 +133,9 @@ export default {
       this.inputData = this.result;
       this.encrypt = !this.encrypt;
     },
+  },
+  created() {
+    this.generatedBits = this.$route.params.bits || '';
   },
 };
 </script>
