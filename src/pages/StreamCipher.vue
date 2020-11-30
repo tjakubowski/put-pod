@@ -52,6 +52,7 @@
 <script>
 import downloadFile from 'js-file-download';
 import readFile from '@/components/utils/file';
+import { bitsToBytes, stringToBinary, isBinary, bytesToString } from '@/components/utils/binary';
 import { streamCipherPanels as panels } from '@/components/data/panels';
 import InfoPanels from '@/components/InfoPanels';
 import BaseCard from '@/components/base/BaseCard';
@@ -69,12 +70,12 @@ export default {
       inputData: '',
       generatedBitsRules: [
         (v) => v.length > 0 || 'Generated bits are required',
-        (v) => this.isBinaryString(v) || 'Generated bits must be a binary string',
+        (v) => isBinary(v) || 'Generated bits must be a binary string',
         (v) => v.length >= this.inputDataLength || `Binary stream length must be equal or greater than ${this.inputDataLength}`,
       ],
       inputDataRules: [
         (v) => v.length > 0 || 'Input data is required',
-        (v) => this.encrypt || (!this.encrypt && this.isBinaryString(v)) || 'Input data must be a binary string',
+        (v) => this.encrypt || (!this.encrypt && isBinary(v)) || 'Input data must be a binary string',
       ],
     };
   },
@@ -93,9 +94,7 @@ export default {
     inputDataBits() {
       if (!this.encrypt) return this.inputData;
 
-      return [...this.inputData]
-        .map((char) => char.charCodeAt(0).toString(2).padStart(8, '0'))
-        .join('');
+      return stringToBinary(this.inputData);
     },
     result() {
       if (!this.isInputDataValid) return '';
@@ -105,11 +104,8 @@ export default {
 
       if (this.encrypt) return xorResult;
 
-      const byteSize = 8;
-      const bytes = Array.from({ length: Math.ceil(xorResult.length / byteSize) },
-        (v, i) => xorResult.slice(i * byteSize, i * byteSize + byteSize));
-
-      return bytes.map((byte) => String.fromCharCode(parseInt(byte, 2))).join('');
+      const bytes = bitsToBytes(xorResult);
+      return bytesToString(bytes);
     },
   },
   methods: {
@@ -120,9 +116,6 @@ export default {
       readFile(file, (result) => {
         this.$set(this, target, result);
       });
-    },
-    isBinaryString(string) {
-      return [...string].every((char) => ['0', '1'].includes(char));
     },
     reverse() {
       this.inputData = this.result;
