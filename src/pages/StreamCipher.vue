@@ -6,17 +6,19 @@
 
     <v-col cols="12" md="6" lg="3">
       <base-card title="Input data" icon="text-subject">
-        <v-textarea counter outlined dense height="200" label="Generated bits" v-model="generatedBits"/>
-        <file-btn text block color="primary" @input="importInputData">
-          <v-icon left v-text="'mdi-import'"/> Import bits stream
-        </file-btn>
+        <v-form ref="inputForm" v-model="isInputDataValid">
+          <v-textarea counter outlined dense height="200" label="Generated bits" v-model.number="generatedBits"/>
+          <file-btn text block color="primary" @input="importData($event, result)">
+            <v-icon left v-text="'mdi-import'"/> Import bits stream
+          </file-btn>
 
-        <v-divider/>
+          <v-divider/>
 
-        <v-textarea counter outlined dense height="200" label="Input text" v-model="inputText"/>
-        <file-btn text block color="primary" @input="importInputData">
-          <v-icon left v-text="'mdi-import'"/> Import text
-        </file-btn>
+          <v-textarea counter outlined dense height="200" label="Input text" v-model="inputText"/>
+          <file-btn text block color="primary" @input="importData($event, result)">
+            <v-icon left v-text="'mdi-import'"/> Import text
+          </file-btn>
+        </v-form>
       </base-card>
     </v-col>
 
@@ -40,17 +42,17 @@ import readFile from '@/components/utils/file';
 import { streamCipherPanels as panels } from '@/components/data/panels';
 import InfoPanels from '@/components/InfoPanels';
 import BaseCard from '@/components/base/BaseCard';
-import FileBtn from "@/components/FileBtn";
+import FileBtn from '@/components/FileBtn';
 
 export default {
   name: 'StreamCipher',
-  components: {FileBtn, BaseCard, InfoPanels },
+  components: { FileBtn, BaseCard, InfoPanels },
   data() {
     return {
       panels,
+      isInputDataValid: false,
       generatedBits: '',
       inputText: '',
-      result: '',
     };
   },
   computed: {
@@ -62,14 +64,21 @@ export default {
         .map((char) => char.charCodeAt(0).toString(2).padStart(8, '0'))
         .join('');
     },
+    result() {
+      if (!this.isInputDataValid) return '';
+
+      return [...this.inputTextBits]
+        .map((bit, index) => +bit ^ +this.generatedBits[index])
+        .join('');
+    },
   },
   methods: {
     downloadResult() {
       if (this.isDone) downloadFile(this.result, 'stream-cipher-result.txt');
     },
-    importInputData(file) {
+    importData(file, target) {
       readFile(file, (result) => {
-        console.log(result);
+        target = result;
       });
     },
   },
