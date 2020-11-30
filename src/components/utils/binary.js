@@ -2,7 +2,11 @@ const bitsToBytes = (bitsString, groupSize = 8) => Array.from({ length: Math.cei
   (v, i) => bitsString.slice(i * groupSize, i * groupSize + groupSize));
 
 const stringToBinary = (string) => [...string]
-  .map((char) => char.charCodeAt(0).toString(2).padStart(8, '0'))
+  .map((char) => char
+    .charCodeAt(0)
+    .toString(2)
+    .substring(0, 8)
+    .padStart(8, '0'))
   .join('');
 
 const isBinary = (string) => [...string].every((char) => ['0', '1'].includes(char));
