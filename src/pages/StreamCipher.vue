@@ -15,7 +15,7 @@
 
     <v-row>
 
-      <v-col cols="12" md="6" lg="3">
+      <v-col cols="12" md="6" lg="3" offset-lg="3">
         <base-card title="Input data" icon="text-subject">
           <v-form ref="inputForm" v-model="isInputDataValid">
             <file-btn class="mb-3" text block color="primary" @input="importData($event, 'generatedBits')">
@@ -34,7 +34,7 @@
         </base-card>
       </v-col>
 
-      <v-col cols="12" lg="6">
+      <v-col cols="12" md="6" lg="3">
         <base-card title="Result" icon="numeric">
           <template v-slot:actions>
             <v-btn text color="primary" @click="downloadResult" :disabled="!isDone">
