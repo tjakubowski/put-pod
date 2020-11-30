@@ -4,6 +4,7 @@ import NihilistSubstitution from '@/pages/NihilistSubstitution.vue';
 import Homepage from '@/pages/Homepage.vue';
 import ShrinkingGenerator from '@/pages/ShrinkingGenerator.vue';
 import { publicPath } from '../../vue.config';
+import StreamCipher from "@/pages/StreamCipher";
 
 Vue.use(VueRouter);
 
@@ -33,6 +34,14 @@ const router = new VueRouter({
       component: ShrinkingGenerator,
       meta: {
         title: 'Shrinking Generator',
+      },
+    },
+    {
+      path: '/stream-cipher',
+      name: 'stream-cipher',
+      component: StreamCipher,
+      meta: {
+        title: 'Stream cipher',
       },
     },
   ],

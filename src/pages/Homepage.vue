@@ -33,6 +33,11 @@ export default {
           description: 'Shrinking generator is a form of pseudorandom number generator intended to be used in a stream cipher.',
           to: '/shrinking-generator',
         },
+        {
+          title: 'Stream cipher',
+          description: 'Stream cipher',
+          to: '/stream-cipher',
+        },
       ],
     };
   },
