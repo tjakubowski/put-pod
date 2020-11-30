@@ -38,4 +38,14 @@ export const shrinkingGeneratorPanels = [
   },
 ];
 
-export default { nihilistSubstitutionPanels, shrinkingGeneratorPanels };
+export const streamCipherPanels = [
+  {
+    header: 'Szyfr strumieniowy',
+    content: [
+      'Algorytm symetryczny szyfrujący oddzielnie każdy bit wiadomości.',
+      'Składa się z generatora strumienia bitowego oraz operacji, która wykonywana jest na wygenerowanych bitach i bitach wiadomości.',
+    ],
+  },
+];
+
+export default { nihilistSubstitutionPanels, shrinkingGeneratorPanels, streamCipherPanels };
