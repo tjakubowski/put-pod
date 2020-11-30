@@ -22,6 +22,7 @@
               <v-icon left v-text="'mdi-import'"/> Import bits stream
             </file-btn>
             <v-textarea counter outlined dense height="200" label="Generated bits" :rules="generatedBitsRules" v-model="generatedBits"/>
+            <v-switch class="mt-0" dense label="Loop generated bits (not recommended)" v-model="loopBits" />
 
             <v-divider/>
 
@@ -65,13 +66,14 @@ export default {
     return {
       panels,
       encrypt: true,
+      loopBits: false,
       isInputDataValid: false,
       generatedBits: '',
       inputData: '',
       generatedBitsRules: [
         (v) => v.length > 0 || 'Generated bits are required',
         (v) => isBinary(v) || 'Generated bits must be a binary string',
-        (v) => v.length >= this.inputDataLength || `Binary stream length must be equal or greater than ${this.inputDataLength}`,
+        (v) => (this.loopBits || v.length >= this.inputDataLength) || `Binary stream length must be equal or greater than ${this.inputDataLength}`,
       ],
       inputDataRules: [
         (v) => v.length > 0 || 'Input data is required',
@@ -81,7 +83,10 @@ export default {
   },
   watch: {
     inputData() {
-      this.$refs.inputForm.validate();
+      this.validate();
+    },
+    loopBits() {
+      this.validate();
     },
   },
   computed: {
@@ -100,7 +105,11 @@ export default {
       if (!this.isInputDataValid) return '';
 
       const xorResult = [...this.inputDataBits]
-        .map((bit, index) => +bit ^ +this.generatedBits[index]).join('');
+        .map((bit, index) => {
+          const generatedBitsIndex = index % this.generatedBits.length;
+          return +bit ^ +this.generatedBits[generatedBitsIndex];
+        })
+        .join('');
 
       if (this.encrypt) return xorResult;
 
@@ -109,6 +118,9 @@ export default {
     },
   },
   methods: {
+    validate() {
+      this.$refs.inputForm.validate();
+    },
     downloadResult() {
       if (this.isDone) downloadFile(this.result, 'stream-cipher-result.txt');
     },
