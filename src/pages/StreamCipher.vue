@@ -7,17 +7,17 @@
     <v-col cols="12" md="6" lg="3">
       <base-card title="Input data" icon="text-subject">
         <v-form ref="inputForm" v-model="isInputDataValid">
-          <v-textarea counter outlined dense height="200" label="Generated bits" v-model.number="generatedBits"/>
-          <file-btn text block color="primary" @input="importData($event, 'generatedBits')">
+          <file-btn class="mb-3" text block color="primary" @input="importData($event, 'generatedBits')">
             <v-icon left v-text="'mdi-import'"/> Import bits stream
           </file-btn>
+          <v-textarea counter outlined dense height="200" label="Generated bits" :rules="generatedBitsRules" v-model="generatedBits"/>
 
           <v-divider/>
 
-          <v-textarea counter outlined dense height="200" label="Input text" v-model="inputText"/>
-          <file-btn text block color="primary" @input="importData($event, 'inputText')">
+          <file-btn class="my-3" text block color="primary" @input="importData($event, 'inputText')">
             <v-icon left v-text="'mdi-import'"/> Import text
           </file-btn>
+          <v-textarea counter outlined dense height="200" label="Input text" :rules="inputTextRules" v-model="inputText"/>
         </v-form>
       </base-card>
     </v-col>
@@ -53,11 +53,27 @@ export default {
       isInputDataValid: false,
       generatedBits: '',
       inputText: '',
+      generatedBitsRules: [
+        (v) => v.length > 0 || 'Generated bits are required',
+        (v) => [...v].every((char) => ['0', '1'].includes(char)) || 'Generated bits must be a binary string',
+        (v) => v.length >= this.inputTextBitsLength || `Binary stream length must be equal or greater than ${this.inputTextBitsLength}`,
+      ],
+      inputTextRules: [
+        (v) => v.length > 0 || 'Input text is required',
+      ],
     };
+  },
+  watch: {
+    inputText() {
+      this.$refs.inputForm.validate();
+    },
   },
   computed: {
     isDone() {
       return this.result.length > 0;
+    },
+    inputTextBitsLength() {
+      return this.inputText.length * 8;
     },
     inputTextBits() {
       return [...this.inputText]
