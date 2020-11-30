@@ -35,7 +35,7 @@ export default {
         },
         {
           title: 'Stream cipher',
-          description: 'Stream cipher',
+          description: 'Symmetric key cipher where plaintext digits are combined with a pseudorandom cipher digit stream',
           to: '/stream-cipher',
         },
       ],
