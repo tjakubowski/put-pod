@@ -8,14 +8,14 @@
       <base-card title="Input data" icon="text-subject">
         <v-form ref="inputForm" v-model="isInputDataValid">
           <v-textarea counter outlined dense height="200" label="Generated bits" v-model.number="generatedBits"/>
-          <file-btn text block color="primary" @input="importData($event, result)">
+          <file-btn text block color="primary" @input="importData($event, 'generatedBits')">
             <v-icon left v-text="'mdi-import'"/> Import bits stream
           </file-btn>
 
           <v-divider/>
 
           <v-textarea counter outlined dense height="200" label="Input text" v-model="inputText"/>
-          <file-btn text block color="primary" @input="importData($event, result)">
+          <file-btn text block color="primary" @input="importData($event, 'inputText')">
             <v-icon left v-text="'mdi-import'"/> Import text
           </file-btn>
         </v-form>
@@ -78,7 +78,7 @@ export default {
     },
     importData(file, target) {
       readFile(file, (result) => {
-        target = result;
+        this.$set(this, target, result);
       });
     },
   },
