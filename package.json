@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "diacritic": "0.0.2",
     "js-file-download": "^0.4.12",
     "portal-vue": "^2.1.7",
     "promise-worker": "^2.0.1",

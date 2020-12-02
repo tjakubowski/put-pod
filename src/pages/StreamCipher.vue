@@ -30,6 +30,11 @@
               <v-icon left v-text="'mdi-import'"/> Import data
             </file-btn>
             <v-textarea counter outlined dense height="200" label="Input data" :rules="inputDataRules" v-model="inputData"/>
+            <base-error class="mx-3" v-if="encrypt && hasDiacritics">
+              Input data has diacritics or accents.
+              <v-btn text small color="error" @click="removeDiacritics">Remove them</v-btn>
+            </base-error>
+            <v-textarea readonly counter outlined dense height="200" label="Input data bits" class="mb-3" :value="inputDataBits" v-if="encrypt"/>
           </v-form>
         </base-card>
       </v-col>
@@ -58,10 +63,12 @@ import {streamCipherPanels as panels} from '@/components/data/panels';
 import InfoPanels from '@/components/InfoPanels';
 import BaseCard from '@/components/base/BaseCard';
 import FileBtn from '@/components/FileBtn';
+import Diacritics from 'diacritic';
+import BaseError from "@/components/base/BaseError";
 
 export default {
   name: 'StreamCipher',
-  components: { FileBtn, BaseCard, InfoPanels },
+  components: {BaseError, FileBtn, BaseCard, InfoPanels },
   data() {
     return {
       panels,
@@ -90,6 +97,9 @@ export default {
     },
   },
   computed: {
+    hasDiacritics() {
+      return this.inputData !== Diacritics.clean(this.inputData);
+    },
     isDone() {
       return this.result.length > 0;
     },
@@ -132,6 +142,9 @@ export default {
     reverse() {
       this.inputData = this.result;
       this.encrypt = !this.encrypt;
+    },
+    removeDiacritics() {
+      this.inputData = Diacritics.clean(this.inputData);
     },
   },
   created() {
