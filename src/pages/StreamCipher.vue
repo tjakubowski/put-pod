@@ -46,7 +46,7 @@
               <v-icon left v-text="'mdi-download'"/> Download
             </v-btn>
           </template>
-          <v-textarea readonly counter outlined dense height="200" label="Result" class="mb-3" :value="result"/>
+          <v-textarea readonly counter outlined dense height="400" label="Result" class="mb-3" :value="result"/>
         </base-card>
       </v-col>
 
