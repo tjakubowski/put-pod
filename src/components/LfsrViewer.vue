@@ -38,14 +38,14 @@ export default {
   },
   methods: {
     isPolynomial(polynomial, index) {
-      return polynomial.includes(index);
+      return polynomial.includes(index + 1);
     },
     nextDigit(lfsr) {
       return lfsr.register.next();
     },
     polynomialString(lfsr) {
       const sortedPolynomial = [...lfsr.polynomial].sort((a, b) => a - b);
-      return sortedPolynomial.map((index) => lfsr.state[index]).join(' ^ ');
+      return sortedPolynomial.map((index) => lfsr.state[index - 1]).join(' ^ ');
     },
   },
 };

@@ -100,12 +100,12 @@ export default {
         a: {
           state: [],
           initialState: '100001010010110111010111010',
-          polynomial: [0, 1, 5, 8],
+          polynomial: [1, 2, 6, 9],
         },
         s: {
           state: [],
           initialState: '10101000010010001001111010010010010001',
-          polynomial: [4, 1, 6, 9, 11, 17, 14],
+          polynomial: [5, 2, 7, 10, 12, 18, 15],
         },
       },
       isInputDataValid: false,

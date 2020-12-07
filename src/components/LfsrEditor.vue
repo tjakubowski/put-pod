@@ -43,6 +43,8 @@ export default {
     return {
       polynomialRules: [
         (v) => v.length > 0 || 'Polynomial is required',
+        (v) => v.every((char) => +char > 0)
+          || 'Minimum polynomial degree is 1',
         (v) => {
           const maxPolynomial = this.register.getMaxPolynomial();
           return v.every((char) => +char <= maxPolynomial)

@@ -51,21 +51,22 @@ export default class LFSR {
 
   isPolynomialValid = (polynomial) => {
     const maxPolynomial = this.getMaxPolynomial();
-    return polynomial.length > 0 && polynomial.every((number) => number <= maxPolynomial);
+    return polynomial.length > 0 && polynomial.every((number) => number <= maxPolynomial && number > 0);
   }
 
   normalizeState = (state) => [...state].map((char) => +char);
 
   normalizePolynomial = (polynomial) => [...new Set(polynomial.map((char) => +char))];
 
-  getMaxPolynomial = () => this.#state.length - 1;
+  getMaxPolynomial = () => this.#state.length;
 
-  next = () => this.polynomial.reduce((previous, current) => {
-    const previousBit = this.state[previous];
-    const nextBit = this.state[current];
+  next = () => this.polynomial.reduce((previousBit, currentBitIndex, arrayIndex) => {
+    if (arrayIndex === 0) return previousBit;
 
-    return previousBit ^ nextBit;
-  })
+    const currentBit = this.state[currentBitIndex - 1];
+
+    return previousBit ^ currentBit;
+  }, this.state[this.polynomial[0] - 1]);
 
   tick = () => {
     const input = this.next();
