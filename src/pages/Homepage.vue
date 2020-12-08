@@ -38,6 +38,11 @@ export default {
           description: 'Symmetric key cipher where plaintext digits are combined with a pseudorandom cipher digit stream',
           to: '/stream-cipher',
         },
+        {
+          title: 'FIPS 140-2 tests',
+          description: 'Symmetric key cipher where plaintext digits are combined with a pseudorandom cipher digit stream',
+          to: '/fips',
+        },
       ],
     };
   },

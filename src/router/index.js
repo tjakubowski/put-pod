@@ -3,8 +3,9 @@ import VueRouter from 'vue-router';
 import NihilistSubstitution from '@/pages/NihilistSubstitution.vue';
 import Homepage from '@/pages/Homepage.vue';
 import ShrinkingGenerator from '@/pages/ShrinkingGenerator.vue';
+import StreamCipher from '@/pages/StreamCipher';
 import { publicPath } from '../../vue.config';
-import StreamCipher from "@/pages/StreamCipher";
+import FipsTests from '../pages/FipsTests';
 
 Vue.use(VueRouter);
 
@@ -42,6 +43,14 @@ const router = new VueRouter({
       component: StreamCipher,
       meta: {
         title: 'Stream cipher',
+      },
+    },
+    {
+      path: '/fips',
+      name: 'fips-140-2',
+      component: FipsTests,
+      meta: {
+        title: 'FIPS 140-2 tests',
       },
     },
   ],
