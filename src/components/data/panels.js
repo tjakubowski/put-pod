@@ -48,4 +48,35 @@ export const streamCipherPanels = [
   },
 ];
 
-export default { nihilistSubstitutionPanels, shrinkingGeneratorPanels, streamCipherPanels };
+export const fipsTestsPanels = [
+  {
+    header: 'Testy FIPS 140-2',
+    content: [
+      '',
+    ],
+  },
+  {
+    header: 'Test pojedynczych bitów',
+    content: [
+      '',
+    ],
+  },
+  {
+    header: 'Test serii',
+    content: [
+      '',
+    ],
+  },
+  {
+    header: 'Test długiej serii',
+    content: [
+      '',
+    ],
+  },
+  {
+    header: 'Test pokerowy',
+    content: [
+      '',
+    ],
+  },
+];
