@@ -58,17 +58,21 @@
 <script>
 import downloadFile from 'js-file-download';
 import readFile from '@/components/utils/file';
-import {bitsToBytes, bytesToString, isBinary, stringToBinary,} from '@/components/utils/binary';
-import {streamCipherPanels as panels} from '@/components/data/panels';
+import {
+  bitsToGroups, bytesToString, isBinary, stringToBinary,
+} from '@/components/utils/binary';
+import { streamCipherPanels as panels } from '@/components/data/panels';
 import InfoPanels from '@/components/InfoPanels';
 import BaseCard from '@/components/base/BaseCard';
 import FileBtn from '@/components/FileBtn';
 import Diacritics from 'diacritic';
-import BaseError from "@/components/base/BaseError";
+import BaseError from '@/components/base/BaseError';
 
 export default {
   name: 'StreamCipher',
-  components: {BaseError, FileBtn, BaseCard, InfoPanels },
+  components: {
+    BaseError, FileBtn, BaseCard, InfoPanels,
+  },
   data() {
     return {
       panels,
@@ -123,7 +127,7 @@ export default {
 
       if (this.encrypt) return xorResult;
 
-      const bytes = bitsToBytes(xorResult);
+      const bytes = bitsToGroups(xorResult);
       return bytesToString(bytes);
     },
   },
