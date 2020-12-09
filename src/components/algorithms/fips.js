@@ -14,8 +14,6 @@ export const testMonoBit = (bits) => {
 export const testRuns = (bits, bit = 1) => {
   validate(bits);
 
-  console.log(bit);
-
   const series = [
     { count: 0, min: 2315, max: 2685 },
     { count: 0, min: 1114, max: 1386 },
@@ -26,7 +24,6 @@ export const testRuns = (bits, bit = 1) => {
   ];
 
   const regex = new RegExp(`${bit}+`, 'mg');
-  debugger;
 
   [...bits.matchAll(regex)].forEach((group) => {
     const seriesIndex = Math.min(group[0].length, series.length) - 1;
