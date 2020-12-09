@@ -50,33 +50,39 @@ export const streamCipherPanels = [
 
 export const fipsTestsPanels = [
   {
-    header: 'Testy FIPS 140-2',
-    content: [
-      '',
-    ],
-  },
-  {
     header: 'Test pojedynczych bitów',
     content: [
-      '',
+      'Test pojedynczych bitów jest zaliczony jeżeli liczba bitów 1 znajduje się w przedziale (9725; 10275).',
     ],
   },
   {
     header: 'Test serii',
     content: [
-      '',
+      'Seria w danym ciągu to maksymalny podciąg następujących po sobie zer lub jedynek.',
+      'Ciąg bitów zostaje podzielony na serie o długości 1, 2, 3, 4, 5 oraz na serię o długości dłuższej lub równej 6. Jeżeli liczba każdej z serii bitów 1 lub 0 mieści się w określonym przedziale, test zostaje zaliczony.',
+      'Test musi zakończyć się pozytywnie zarówno dla serii zer jak i jedynek w ciągu bitów.',
+      'Długość serii - 1, przedział (2315; 2685)',
+      'Długość serii - 2, przedział (1114; 1386)',
+      'Długość serii - 3, przedział (527; 723)',
+      'Długość serii - 4, przedział (240; 384)',
+      'Długość serii - 5, przedział (103; 209)',
+      'Długość serii - 6+, przedział (103; 209)',
     ],
   },
   {
     header: 'Test długiej serii',
     content: [
-      '',
+      'Seria w danym ciągu to maksymalny podciąg następujących po sobie zer lub jedynek.',
+      'Jeżeli w ciągu bitów nie występuje seria o długości równej lub większej niż 26, test zostaje zaliczony.',
     ],
   },
   {
     header: 'Test pokerowy',
     content: [
-      '',
+      'Ciąg bitów zostaje podzielony na 4 bitowe grupy co skutkuje otrzymaniem 5000 segmentów bitów.',
+      'Należy policzyć liczbę wystąpień każdej z możliwych 16 - 4 bitowych wartości.',
+      'Wykorzystując wzór 16/5000 * X - 5000, gdzie X to suma kwadratów liczby wystąpień 4 bitowych wartości, obliczany jest wynik końcowy.',
+      'Jeżeli wynik końcowy znajduje się w przedziale (2,16; 46,17) to test uznany jest za zaliczony.',
     ],
   },
 ];
